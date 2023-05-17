@@ -13,9 +13,9 @@ var speedMovement = 0.002;
 var joystickSpeedMovement = 0.0055;
 
 // Simulated Gravity
-var gravity;
+var gravity;    
 var gravityMultiplier = 3000;
-var jumpMultiplier = 0.15;
+var jumpMultiplier = 0.17;
 let onGround = false;
 
 // RayCast
@@ -29,6 +29,36 @@ var ramps = [];
 var particleSystem
 
 
+function updateMovement(deltaTime) {
+    gravity = deltaTime / gravityMultiplier;
+    ramps.forEach((ramp)=>{
+        if (player.intersectsMesh(ramp))
+        {
+            jumpValue = deltaTime * 0.01;
+            gravity = 0.08;
+            if (jumpPressed)
+            {
+                jumpValue = deltaTime * jumpMultiplier;
+                gravity = deltaTime / gravityMultiplier;
+            }
+        } 
+    })
+
+    jumpValue -= gravity * deltaTime;
+    if (jumpPressed && onGround)
+    {
+        onGround = false;
+        jumpValue = deltaTime * jumpMultiplier*1.2;
+    }
+
+    if (jumpValue > deltaTime * jumpMultiplier*1.2)
+        jumpValue = deltaTime * jumpMultiplier*1.2;
+    
+    // Update Base FrontVector
+    frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/30,0));
+    // Update Particle System Position
+    particleSystem.emitter = new BABYLON.Vector3(player.position.x, 0, player.position.z);
+}
 
 // Player Movement //
 function setPlayerMovement() {
@@ -50,7 +80,6 @@ function setPlayerMovement() {
     // Create Smoke Particles
     createSmokeParticles(player);
 
-
     // Mobile Device
     // Return and Set Joystick Controller
     if (isTouch) {
@@ -58,69 +87,40 @@ function setPlayerMovement() {
         return;
     }
 
+    
     // Update Movement Keyboard Controller
     scene.registerBeforeRender(()=>{
        
-        var dt = engine.getDeltaTime();
+        var deltaTime = engine.getDeltaTime();
         var pick = scene.pickWithRay(ray);
         if (pick.pickedMesh){
            onGround = pick.hit;
 	    }
 
-        gravity = dt / gravityMultiplier;
-
-        ramps.forEach((ramp)=>{
-            if (player.intersectsMesh(ramp))
-            {
-                console.log("Enter Ramp");
-                jumpValue = dt * 0.02;
-                gravity = 0.08;
-                if (jumpPressed)
-                {
-                    jumpValue = dt * jumpMultiplier;
-                    gravity = dt / gravityMultiplier;
-                }
-            } 
-        })
-
-        jumpValue -= gravity * dt;
-        if (jumpPressed && onGround)
-        {
-            onGround = false;
-            jumpValue = dt * jumpMultiplier*1.2;
-        }
-
-        if (jumpValue > dt * jumpMultiplier*1.2)
-            jumpValue = dt * jumpMultiplier*1.2;
-        
-        // Update Base FrontVector
-        frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/30,0));
-
-        // Update Particle System Position
-        particleSystem.emitter = new BABYLON.Vector3(player.position.x, 0, player.position.z);
+        updateMovement(deltaTime);
 
         // Run Forward
         if (isWPressed) {
             if (onGround)
             {
-                // jumpValue -= gravity * dt;
+                // jumpValue -= gravity * deltaTime;
                 scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runAnim,  1.2));
                 particleSystem.start();
             }
             currentAnim = runAnim;
-            frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue,1)).scale(speedMovement*dt*3);
+            frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue,1)).scale(speedMovement*deltaTime*3);
         }
         // Run Backward
         if (isSPressed) {
             if (onGround)
             {
-                // jumpValue -= gravity * dt;
+                // jumpValue -= gravity * deltaTime;
                 scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runBackAnim, 1.5));
                 particleSystem.start();
             }
             
             currentAnim = runBackAnim;
-            frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue,-1)).scale(speedMovement*dt*3);
+            frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue,-1)).scale(speedMovement*deltaTime*3);
         }
         // Rotate Left
         if (isAPressed) {
@@ -134,7 +134,7 @@ function setPlayerMovement() {
         // Rotate actions
         if (isAPressed || isDPressed)
         {
-            player.rotate(rotationAxis, speedMovement*dt, BABYLON.Space.LOCAL);
+            player.rotate(rotationAxis, speedMovement*deltaTime, BABYLON.Space.LOCAL);
             player.frontVector = new BABYLON.Vector3(Math.sin(player.rotation.z), jumpValue, Math.cos(player.rotation.z))
 
             // Check if Player is currently moving
@@ -219,58 +219,27 @@ function setJoystickController() {
     // Update Movement Joystick Controller
     scene.registerBeforeRender(()=>{
 
-        var dt = engine.getDeltaTime();
+        var deltaTime = engine.getDeltaTime();
         var pick = scene.pickWithRay(ray);
         if (pick.pickedMesh){
            onGround = pick.hit;
 	    }
-        gravity = dt / gravityMultiplier;
      
-        ramps.forEach((ramp)=>{
-            if (player.intersectsMesh(ramp))
-            {
-                console.log("Enter Ramp");
-                jumpValue = dt * 0.02;
-                gravity = 0.08;
-                if (jumpPressed)
-                {
-                    jumpValue = dt * jumpMultiplier;
-                    gravity = dt / gravityMultiplier;
-                }
-            } 
-        })
-        
-
-        jumpValue -= gravity * dt;
-        if (jumpPressed && onGround)
-        {
-            onGround = false;
-            jumpValue = dt * 0.25;
-            console.log("JumpValue: " + jumpValue);
-        }
-
-        if (jumpValue > dt * jumpMultiplier*1.2)
-            jumpValue = dt * jumpMultiplier*1.2;
-
-        // Update Base FrontVector
-        frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/30,0));
-
-        // Update Particle System Position
-        particleSystem.emitter = new BABYLON.Vector3(player.position.x, 0, player.position.z);
+        updateMovement(deltaTime);
 
         // Move Forward or Backward
         if (leftJoystick.pressed && leftJoystick.deltaPosition.y != 0) {
 
             if (leftJoystick.deltaPosition.y > 0)
-                frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/2,1)).scale(leftJoystick.deltaPosition.y*joystickSpeedMovement*dt);
+                frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/2,1)).scale(leftJoystick.deltaPosition.y*joystickSpeedMovement*deltaTime);
             else
-                frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/2,-1)).scale(-leftJoystick.deltaPosition.y*joystickSpeedMovement*dt);
+                frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/2,-1)).scale(-leftJoystick.deltaPosition.y*joystickSpeedMovement*deltaTime);
 
             if (leftJoystick.deltaPosition.y > 0)
             {
                 if (onGround)
                 {
-                    jumpValue -= gravity * dt;
+                    jumpValue -= gravity * deltaTime;
                     scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runAnim, 1.5));
                     particleSystem.start();
                 }
@@ -279,7 +248,7 @@ function setJoystickController() {
                 scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runAnim, 1.2));
                 if (onGround)
                 {
-                    jumpValue -= gravity * dt;
+                    jumpValue -= gravity * deltaTime;
                     scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runBackAnim, 1.5));
                     particleSystem.start();
                 }
@@ -296,7 +265,7 @@ function setJoystickController() {
         if (rightJoystick.pressed) {
 
             var rotationAxis = new BABYLON.Vector3(0, 1, 0)
-            player.rotate(rotationAxis, rightJoystick.deltaPosition.x*speedMovement*dt, BABYLON.Space.LOCAL);
+            player.rotate(rotationAxis, rightJoystick.deltaPosition.x*speedMovement*deltaTime, BABYLON.Space.LOCAL);
             player.frontVector = new BABYLON.Vector3(Math.sin(player.rotation.z), jumpValue, Math.cos(player.rotation.z))
 
             // Check if Player is currently moving
