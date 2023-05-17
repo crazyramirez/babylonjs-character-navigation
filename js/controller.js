@@ -15,8 +15,8 @@ var joystickSpeedMovement = 0.0055;
 
 // Simulated Gravity
 var gravity;    
-var gravityMultiplier = 1700;
-var jumpMultiplier = 0.3;
+var gravityMultiplier = 2000;
+var jumpMultiplier = 0.28;
 let onGround = false;
 let onScalable = false;
 
@@ -48,26 +48,20 @@ function updateMovement(deltaTime) {
     }
     
     gravity = deltaTime / gravityMultiplier;
-    // if (onGround)
-    //     jumpValue = -0.5;
-    
-    // engine.getFps().toFixed()
+
     scalables.forEach((scalable)=>{
         if (player.intersectsMesh(scalable, true))
         {
+            console.log("Scalable");
             onScalable = true;
             // jumpValue = deltaTime * 0.02;
             jumpValue = engine.getFps() * 0.1 / 60;
             // console.log("JumpValue" + jumpValue);
             gravity = engine.getFps() * 0.05 / 60;
 
-            // setTimeout(() => {
-            //     gravity = deltaTime / gravityMultiplier * 2;
-            // }, 200);
-
             if (jumpPressed)
             {
-                jumpValue = deltaTime * jumpMultiplier;
+                jumpValue = deltaTime * jumpMultiplier/0.5;
                 gravity = deltaTime / gravityMultiplier;
             }
         } 
@@ -80,8 +74,8 @@ function updateMovement(deltaTime) {
         jumpValue = deltaTime * jumpMultiplier;
     } 
 
-    if (jumpValue > deltaTime * jumpMultiplier * 1.1)
-        jumpValue = deltaTime * jumpMultiplier * 1.1;
+    if (jumpValue > deltaTime * jumpMultiplier)
+        jumpValue = deltaTime * jumpMultiplier;
 
 
     // if (onGround)
@@ -89,6 +83,7 @@ function updateMovement(deltaTime) {
     // else 
     //     jumpValue -= gravity * deltaTime;
 
+    gravity += engine.getFps() / 100000;
     jumpValue -= gravity * deltaTime;
 
     // Update Base FrontVector
@@ -207,18 +202,15 @@ function setPlayerMovement() {
             particleSystem.stop()
         }
 
-        if (!onGround && !falling)
+        if (!onGround)
         {
             // scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, walkAnim, 0.5, 0.03));
-            runBackAnim.speedRatio = 0.5;
-            runBackAnim.play(false);
+            // runBackAnim.stop();
+            runBackAnim.speedRatio = 0.7;
+            runBackAnim.start(false, 0, 10, true);
             currentAnim = runBackAnim;
             particleSystem.stop();
-        } else if (!onGround && falling) {
-
-        } else {
-            falling = false;
-        }
+        } 
 
         if (!jumpPressed && !onGround && Math.round(velocity.y) == 0 && !falling)
         {
@@ -228,7 +220,6 @@ function setPlayerMovement() {
 
         checkVelocity();
         player.moveWithCollisions(frontVector);
-        // console.log('Velocity:', velocity.y);
     });
 }
 
@@ -339,7 +330,7 @@ function setJoystickController() {
                 scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, walkAnim, 1.0, 0.03));
             }
         } else {
-            rightJoystick.deltaPosition.x = 0;
+            // rightJoystick.deltaPosition.x = 0;
         }
 
         // Check Idle Animation
@@ -352,7 +343,7 @@ function setJoystickController() {
         {
             // scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, walkAnim, 0.5, 0.03));
             runBackAnim.speedRatio = 0.5;
-            runBackAnim.play(false);
+            runBackAnim.start(false, 0, 10, false);
             currentAnim = runBackAnim;
             particleSystem.stop();
         } else if (!onGround && falling) {
@@ -369,7 +360,6 @@ function setJoystickController() {
 
         checkVelocity();
         player.moveWithCollisions(frontVector);
-        // console.log('Velocity:', velocity.y);
     });
 }
 

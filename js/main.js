@@ -331,7 +331,7 @@ function importModelAsync(model) {
             });
 
             // Main Player Collision Box
-            player = BABYLON.MeshBuilder.CreateBox("player", { width: 0.5, height: 1, size:0.5}, scene);
+            player = BABYLON.MeshBuilder.CreateCapsule("player", { width: 0.5, height: 1, size:0.5}, scene);
             player.visibility = 0;
             player.ellipsoid = new BABYLON.Vector3(0.5, 0.5, 0.5);
             player.position.y = 0.5;
