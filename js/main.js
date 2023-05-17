@@ -296,7 +296,7 @@ function importModelAsync(model) {
 
             setTimeout(() => {
                 hideLoadingView();              
-            }, 500);
+            }, 1000);
 
             // Set Player Controller -- controller.js
             setPlayerMovement();
