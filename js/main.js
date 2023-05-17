@@ -150,12 +150,14 @@ function demoObjects() {
     box1.receiveShadows = true;
 
     const box2 = BABYLON.MeshBuilder.CreateBox("box2", {
-        size: 2
+        size: 5,
+        width: 5,
+        height: 0.5
     }, scene);
     box2.material = basicMaterial;
-    box2.position.y = 1;
-    box2.position.x = -5;
-    box2.position.z = -4;
+    box2.position.x = -7;
+    box2.position.y = 2;
+    box2.position.z = -3;
     box2.checkCollisions = true;
     box2.isPickable = true;
     box2.receiveShadows = true;
@@ -166,8 +168,8 @@ function demoObjects() {
         height: 1
     }, scene);
     box3.material = basicMaterial;
+    box3.position.x = -3;
     box3.position.y = 1;
-    box3.position.x = 0;
     box3.position.z = 12;
     box3.checkCollisions = true;
     box3.isPickable = true;
@@ -186,25 +188,25 @@ function demoObjects() {
     box4.receiveShadows = true;
 
     const box5 = BABYLON.MeshBuilder.CreateBox("box5", {
-        size: 3,
-        width: 3,
+        size: 4,
+        width: 4,
         height: 1
     }, scene);
     box5.material = basicMaterial;
-    box5.position.y = 1.5;
     box5.position.x = -5;
-    box5.position.z = 7;
+    box5.position.y = 1.5;
+    box5.position.z = 6;
     box5.checkCollisions = true;
     box5.isPickable = true;
     box5.receiveShadows = true;
 
     const ramp = BABYLON.MeshBuilder.CreateBox("ramp", {
         size: 3,
-        width: 3,
+        width: 6,
         height: 1
     }, scene);
-    ramp.position.y = 0;
     ramp.position.x = 5;
+    ramp.position.y = 0;
     ramp.position.z = -7;
     ramp.checkCollisions = true;
     ramp.isPickable = true;
@@ -212,17 +214,44 @@ function demoObjects() {
     ramp.rotation.x += Math.PI / 5;
 
     const ramp2 = BABYLON.MeshBuilder.CreateBox("ramp", {
-        size: 4,
-        width: 4,
+        size: 8,
+        width: 6,
         height: 1
     }, scene);
-    ramp2.position.y = 0;
     ramp2.position.x = 0;
+    ramp2.position.y = 0;
     ramp2.position.z = -10;
     ramp2.checkCollisions = true;
     ramp2.isPickable = true;
     ramp2.receiveShadows = true;
     ramp2.rotation.x += Math.PI / 5;
+
+
+    // Stairs
+    var stairsArray = [];
+    for (let index = 0; index < 10; index++) {
+        
+        var stairs0 = BABYLON.MeshBuilder.CreateBox("stairs", {size: 1, width: 5, height: 0.4}, scene);
+        stairs0.position.y = -0.22 + 0.2*index;
+        stairs0.position.z = 0.5*index;
+        stairsArray.push(stairs0);
+    }
+
+    var mergeStairs = new BABYLON.Mesh.MergeMeshes(stairsArray, true);
+    mergeStairs.name = "stairs";
+    mergeStairs.checkCollisions = true;
+    mergeStairs.isPickable = true;
+    mergeStairs.position.x = 4;
+    mergeStairs.position.y = 0;
+    mergeStairs.position.z = 10;
+
+    var mergeStairs2 = mergeStairs.clone();
+    mergeStairs2.name = "stairs";
+    mergeStairs2.checkCollisions = true;
+    mergeStairs2.isPickable = true;
+    mergeStairs2.position.x = -1;
+    mergeStairs2.position.y = 0;
+    mergeStairs2.position.z = 16;   
 
     var groundMaterial = new BABYLON.PBRMaterial("groundMaterial", scene);
     groundMaterial.albedoTexture = new BABYLON.Texture("./resources/textures/ground.jpg", scene);
@@ -237,26 +266,8 @@ function demoObjects() {
     box3.material = groundMaterial;
     box4.material = groundMaterial;
     box5.material = groundMaterial;
-
-    // Stairs
-
-    var stairsArray = [];
-    for (let index = 0; index < 10; index++) {
-        
-        var stairs0 = BABYLON.MeshBuilder.CreateBox("stairs", {size: 1, width: 5, height: 0.4}, scene);
-        stairs0.position.y = -0.22 + 0.2*index;
-        stairs0.position.z = 0.5*index;
-        stairs0.material = groundMaterial;
-        stairsArray.push(stairs0);
-    }
-
-
-    var mergeStairs = new BABYLON.Mesh.MergeMeshes(stairsArray, true);
-    mergeStairs.name = "stairs";
-    mergeStairs.checkCollisions = true;
-    mergeStairs.isPickable = true;
-    mergeStairs.position.z = 10;
-    mergeStairs.position.x = 5;
+    mergeStairs.material = groundMaterial;
+    mergeStairs2.material = groundMaterial;
 }
 
 
