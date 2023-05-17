@@ -16,7 +16,7 @@ var joystickSpeedMovement = 0.0055;
 // Simulated Gravity
 var gravity;    
 var gravityMultiplier = 3000;
-var jumpMultiplier = 0.17;
+var jumpMultiplier = 0.15;
 let onGround = false;
 
 // Check Velocity Y Position for Falling Action
@@ -29,8 +29,9 @@ var falling;
 const ray = new BABYLON.Ray();
 const rayHelper = new BABYLON.RayHelper(ray); 
 
-// Ramps
+// Scalable Objects
 var ramps = [];
+var stairs = [];
 
 // Particle System
 var particleSystem
@@ -39,8 +40,22 @@ var particleSystem
 // Update Movement
 function updateMovement(deltaTime) {
     gravity = deltaTime / gravityMultiplier;
+    
     ramps.forEach((ramp)=>{
         if (player.intersectsMesh(ramp, true))
+        {
+            jumpValue = deltaTime * 0.01;
+            gravity = 0.08;
+            if (jumpPressed)
+            {
+                jumpValue = deltaTime * jumpMultiplier;
+                gravity = deltaTime / gravityMultiplier;
+            }
+        } 
+    });
+
+    stairs.forEach((stair)=>{
+        if (player.intersectsMesh(stair, true))
         {
             jumpValue = deltaTime * 0.01;
             gravity = 0.08;
@@ -101,6 +116,14 @@ function setPlayerMovement() {
         if (mesh.name == "ramp")
         {
             ramps.push(mesh);
+        }
+    });
+
+    // Find Stairs on the Scene
+    scene.meshes.forEach((mesh)=>{
+        if (mesh.name == "stairs")
+        {
+            stairs.push(mesh);
         }
     });
 

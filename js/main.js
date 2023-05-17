@@ -144,6 +144,7 @@ function demoObjects() {
     box1.material = basicMaterial;
     box1.position.y = 0.5;
     box1.position.x = 4;
+    box1.position.z = 0;
     box1.checkCollisions = true;
     box1.isPickable = true;
     box1.receiveShadows = true;
@@ -154,6 +155,7 @@ function demoObjects() {
     box2.material = basicMaterial;
     box2.position.y = 1;
     box2.position.x = -5;
+    box2.position.z = -4;
     box2.checkCollisions = true;
     box2.isPickable = true;
     box2.receiveShadows = true;
@@ -171,7 +173,7 @@ function demoObjects() {
     box3.isPickable = true;
     box3.receiveShadows = true;
 
-    const box4 = BABYLON.MeshBuilder.CreateBox("box1", {
+    const box4 = BABYLON.MeshBuilder.CreateBox("box4", {
         size: 3,
         width: 3,
         height: 1
@@ -182,6 +184,19 @@ function demoObjects() {
     box4.checkCollisions = true;
     box4.isPickable = true;
     box4.receiveShadows = true;
+
+    const box5 = BABYLON.MeshBuilder.CreateBox("box5", {
+        size: 3,
+        width: 3,
+        height: 1
+    }, scene);
+    box5.material = basicMaterial;
+    box5.position.y = 1.5;
+    box5.position.x = -5;
+    box5.position.z = 7;
+    box5.checkCollisions = true;
+    box5.isPickable = true;
+    box5.receiveShadows = true;
 
     const ramp = BABYLON.MeshBuilder.CreateBox("ramp", {
         size: 3,
@@ -221,6 +236,27 @@ function demoObjects() {
     box2.material = groundMaterial;
     box3.material = groundMaterial;
     box4.material = groundMaterial;
+    box5.material = groundMaterial;
+
+    // Stairs
+
+    var stairsArray = [];
+    for (let index = 0; index < 10; index++) {
+        
+        var stairs0 = BABYLON.MeshBuilder.CreateBox("stairs", {size: 1, width: 5, height: 0.4}, scene);
+        stairs0.position.y = -0.22 + 0.2*index;
+        stairs0.position.z = 0.5*index;
+        stairs0.material = groundMaterial;
+        stairsArray.push(stairs0);
+    }
+
+
+    var mergeStairs = new BABYLON.Mesh.MergeMeshes(stairsArray, true);
+    mergeStairs.name = "stairs";
+    mergeStairs.checkCollisions = true;
+    mergeStairs.isPickable = true;
+    mergeStairs.position.z = 10;
+    mergeStairs.position.x = 5;
 }
 
 
@@ -255,7 +291,7 @@ function importModelAsync(model) {
             });
 
             // Main Player Collision Box
-            player = BABYLON.MeshBuilder.CreateBox("player", { width: 0.4, height: 1, size:0.4}, scene);
+            player = BABYLON.MeshBuilder.CreateBox("player", { width: 0.5, height: 1, size:0.5}, scene);
             player.visibility = 0;
             player.ellipsoid = new BABYLON.Vector3(0.5, 0.5, 0.5);
             player.position.y += 0.5;
