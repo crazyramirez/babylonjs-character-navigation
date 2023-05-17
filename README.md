@@ -11,3 +11,9 @@ On mobile use the Left Stick for movement and the Right Stick to turn the charac
 Try the LIVE Demo
 
 https://www.viseni.com/character_navigation/
+
+-- TO DO --
+- Clean & improve code
+- Improve jump movement
+- Add new animiations (Jumping, Falling...)
+- Add support for double jump
