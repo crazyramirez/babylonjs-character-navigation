@@ -9,4 +9,5 @@ Use WASD controls and arrows on the computer.
 On mobile use the Left Stick for movement and the Right Stick to turn the character.
 
 Try the LIVE Demo
+
 https://www.viseni.com/character_navigation/
