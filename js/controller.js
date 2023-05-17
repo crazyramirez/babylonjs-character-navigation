@@ -13,7 +13,9 @@ var speedMovement = 0.002;
 var joystickSpeedMovement = 0.005;
 
 // Simulated Gravity
-var gravity = 0.006;
+var gravity;
+var gravityMultiplier = 3000;
+var jumpMultiplier = 0.15;
 let onGround = false;
 
 
@@ -66,7 +68,7 @@ function setPlayerMovement() {
            onGround = pick.hit;
 	    }
 
-        gravity = dt / 2000;
+        gravity = dt / gravityMultiplier;
 
         ramps.forEach((ramp)=>{
             if (player.intersectsMesh(ramp))
@@ -76,8 +78,8 @@ function setPlayerMovement() {
                 gravity = 0.08;
                 if (jumpPressed)
                 {
-                    jumpValue = dt * 0.2;
-                    gravity = dt / 2000;
+                    jumpValue = dt * jumpMultiplier;
+                    gravity = dt / gravityMultiplier;
                 }
             } 
         })
@@ -86,11 +88,11 @@ function setPlayerMovement() {
         if (jumpPressed && onGround)
         {
             onGround = false;
-            jumpValue = dt * 0.25;
+            jumpValue = dt * jumpMultiplier*1.2;
         }
 
-        if (jumpValue > dt * 0.25)
-            jumpValue = dt * 0.25;
+        if (jumpValue > dt * jumpMultiplier*1.2)
+            jumpValue = dt * jumpMultiplier*1.2;
         
         // Update Base FrontVector
         frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/30,0));
@@ -117,6 +119,7 @@ function setPlayerMovement() {
                 scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runBackAnim, 1.5));
                 particleSystem.start();
             }
+            
             currentAnim = runBackAnim;
             frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue,-1)).scale(speedMovement*dt*3);
         }
@@ -222,7 +225,7 @@ function setJoystickController() {
         if (pick.pickedMesh){
            onGround = pick.hit;
 	    }
-        gravity = dt / 2000;
+        gravity = dt / gravityMultiplier;
      
         ramps.forEach((ramp)=>{
             if (player.intersectsMesh(ramp))
@@ -232,8 +235,8 @@ function setJoystickController() {
                 gravity = 0.08;
                 if (jumpPressed)
                 {
-                    jumpValue = dt * 0.2;
-                    gravity = dt / 2000;
+                    jumpValue = dt * jumpMultiplier;
+                    gravity = dt / gravityMultiplier;
                 }
             } 
         })
@@ -247,8 +250,8 @@ function setJoystickController() {
             console.log("JumpValue: " + jumpValue);
         }
 
-        if (jumpValue > dt * 0.25)
-            jumpValue = dt * 0.25;
+        if (jumpValue > dt * jumpMultiplier*1.2)
+            jumpValue = dt * jumpMultiplier*1.2;
 
         // Update Base FrontVector
         frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/30,0));
