@@ -15,9 +15,10 @@ var joystickSpeedMovement = 0.0055;
 
 // Simulated Gravity
 var gravity;    
-var gravityMultiplier = 2000;
+var gravityMultiplier = 3000;
 var jumpMultiplier = 0.17;
 let onGround = false;
+let onScalable = false;
 
 // Check Velocity Y Position for Falling Action
 var previousPosition;
@@ -30,8 +31,7 @@ const ray = new BABYLON.Ray();
 const rayHelper = new BABYLON.RayHelper(ray); 
 
 // Scalable Objects
-var ramps = [];
-var stairs = [];
+var scalables = [];
 
 // Particle System
 var particleSystem
@@ -39,13 +39,27 @@ var particleSystem
 
 // Update Movement
 function updateMovement(deltaTime) {
-    gravity = deltaTime / gravityMultiplier;
+
+    var pick = scene.pickWithRay(ray);
+    if (pick.hit){
+       onGround = true;
+    } else {
+        onGround = false;
+    }
     
-    ramps.forEach((ramp)=>{
-        if (player.intersectsMesh(ramp, true))
+    gravity = deltaTime / gravityMultiplier;
+    // if (onGround)
+    //     jumpValue = -0.5;
+    
+    // engine.getFps().toFixed()
+    scalables.forEach((scalable)=>{
+        if (player.intersectsMesh(scalable, true))
         {
-            jumpValue = deltaTime * 0.01;
-            gravity = 0.08;
+            onScalable = true;
+            // jumpValue = deltaTime * 0.02;
+            jumpValue = engine.getFps() * 0.1 / 60;
+            console.log("JumpValue" + jumpValue);
+            gravity = engine.getFps() * 0.05 / 60;
             if (jumpPressed)
             {
                 jumpValue = deltaTime * jumpMultiplier;
@@ -54,33 +68,28 @@ function updateMovement(deltaTime) {
         } 
     });
 
-    stairs.forEach((stair)=>{
-        if (player.intersectsMesh(stair, true))
-        {
-            jumpValue = deltaTime * 0.01;
-            gravity = 0.08;
-            if (jumpPressed)
-            {
-                jumpValue = deltaTime * jumpMultiplier;
-                gravity = deltaTime / gravityMultiplier;
-            }
-        } 
-    })
 
-    jumpValue -= gravity * deltaTime;
     if (jumpPressed && onGround)
     {
         onGround = false;
-        jumpValue = deltaTime * jumpMultiplier*1.2;
+        jumpValue = deltaTime * jumpMultiplier;
     } 
 
-    if (jumpValue > deltaTime * jumpMultiplier*1.2)
-        jumpValue = deltaTime * jumpMultiplier*1.2;
+    if (jumpValue > deltaTime * jumpMultiplier)
+        jumpValue = deltaTime * jumpMultiplier;
+
+
+    // if (onGround)
+    //     jumpValue = -deltaTime/20;
+    // else 
+    //     jumpValue -= gravity * deltaTime;
+
+    jumpValue -= gravity * deltaTime;
 
     // Update Base FrontVector
     frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/30,0));
     // Update Particle System Position
-    particleSystem.emitter = new BABYLON.Vector3(player.position.x, 0, player.position.z);
+    particleSystem.emitter = new BABYLON.Vector3(player.position.x, player.position.y-0.5, player.position.z);
 }
 
 // Check Velocity Y Position for Falling Action
@@ -104,7 +113,7 @@ function setPlayerMovement() {
     onGround = false;
 
     // Create Ray Helper
-    rayHelper.attachToMesh(player, new BABYLON.Vector3(0, -0.98, 0), new BABYLON.Vector3(0, -0.47, 0), 0.4);
+    rayHelper.attachToMesh(player, new BABYLON.Vector3(0, -0.98, 0), new BABYLON.Vector3(0, -0.45, 0), 0.35);
     rayHelper.show(scene, new BABYLON.Color3(1, 0, 0));
 
     // Position & Time for Velocity 
@@ -112,20 +121,13 @@ function setPlayerMovement() {
     previousTime = performance.now();
 
     // Find Ramps on the Scene
-    scene.meshes.forEach((mesh)=>{
-        if (mesh.name == "ramp")
+    scene.meshes.forEach((scalable)=>{
+        if (scalable.name == "scalable")
         {
-            ramps.push(mesh);
+            scalables.push(scalable);
         }
     });
 
-    // Find Stairs on the Scene
-    scene.meshes.forEach((mesh)=>{
-        if (mesh.name == "stairs")
-        {
-            stairs.push(mesh);
-        }
-    });
 
     // Create Smoke Particles
     createSmokeParticles(player);
@@ -141,10 +143,6 @@ function setPlayerMovement() {
     scene.registerBeforeRender(()=>{
        
         var deltaTime = engine.getDeltaTime();
-        var pick = scene.pickWithRay(ray);
-        if (pick.pickedMesh){
-           onGround = pick.hit;
-	    }
 
         updateMovement(deltaTime);
 
@@ -279,15 +277,13 @@ function setJoystickController() {
     rightJoystick.setJoystickColor("#b3dbbf40");
     BABYLON.VirtualJoystick.Canvas.style.zIndex = "4";
 
+
+   
     // Update Movement Joystick Controller
     scene.registerBeforeRender(()=>{
 
         var deltaTime = engine.getDeltaTime();
-        var pick = scene.pickWithRay(ray);
-        if (pick.pickedMesh){
-           onGround = pick.hit;
-	    }
-     
+
         updateMovement(deltaTime);
 
         // Move Forward or Backward
@@ -400,7 +396,7 @@ function* animationBlending (fromAnim, toAnim, speed, blendingSpeed) {
 
 // Smoke Particles
 function createSmokeParticles() { 
-    particleSystem = new BABYLON.ParticleSystem("particles", 500, scene);
+    particleSystem = new BABYLON.ParticleSystem("particles", 200, scene);
     particleSystem.particleTexture = new BABYLON.Texture("./resources/images/smoke.png", scene);
     particleSystem.emitter = new BABYLON.Vector3(player.position.x, 0, player.position.z);
     particleSystem.minEmitBox = new BABYLON.Vector3(-0.1, -0.1, -0.1); // Starting all from

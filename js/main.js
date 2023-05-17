@@ -7,7 +7,7 @@ var engine = new BABYLON.Engine(canvas, true, { stencil: false }, true);
 var scene = createScene(engine, canvas);
 var camera = new BABYLON.ArcRotateCamera("camera", BABYLON.Tools.ToRadians(-90), BABYLON.Tools.ToRadians(65), 6, BABYLON.Vector3.Zero(), scene);
 var dirLight = new BABYLON.DirectionalLight("dirLight", new BABYLON.Vector3(0,0,0), scene);
-var shadowGenerator = new BABYLON.ShadowGenerator(1024, dirLight, true);
+var shadowGenerator = new BABYLON.ShadowGenerator(512, dirLight, true);
 
 var hdrTexture;
 var hdrRotation = 0;
@@ -85,6 +85,15 @@ function startGame() {
     ground.isPickable = true;
     ground.receiveShadows = true;
 
+    // const ground2 = BABYLON.MeshBuilder.CreateGroundFromHeightMap("ground", "./resources/textures/heightMap2.png", {
+    //     width: 200, height: 200, subdivisions: 100, maxHeight: 5, minHeight: -2
+    // });
+    // ground2.position.y = -3;
+    // ground2.checkCollisions = true;
+    // ground2.isPickable = true;
+    // ground2.material = groundMaterial;
+    // groundMaterial.wireframe = true;
+
     // Basic PBR Material
     basicMaterial = new BABYLON.PBRMaterial("groundMaterial", scene);
     basicMaterial.albedoColor = new BABYLON.Color3(0.5,0.5,0.5);
@@ -100,14 +109,30 @@ function startGame() {
         stats.innerHTML = "<b>" + Math.round(engine.getFps()) + " FPS <br></b> ";
     });
 
+
     if (!isTouch)
     {
+        // loadGUI();
         document.getElementById("customBT").style.display = "none";
     }
+
+
+    $(document).ready(function(){ 
+        $('#customBT').on('click touchstart', function() {
+            jumpFromBT();
+        });
+    });
 
     // scene.debugLayer.show({embedMode: true}).then(function () {
     // });
 }
+
+// async function loadGUI() {
+
+//     let advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("GUI", true, scene);  
+//     let loadedGUI = await advancedTexture.parseFromSnippetAsync("#Q6F23Z#2");
+//     loadedGUI.
+// }
 
 // Demo Objects
 function demoObjects() {
@@ -137,7 +162,7 @@ function demoObjects() {
     });
 
     // Boxes
-    const box1 = BABYLON.MeshBuilder.CreateBox("stairs", {
+    const box1 = BABYLON.MeshBuilder.CreateBox("scalable", {
         size: 3,
         width: 3,
         height: 1
@@ -150,7 +175,7 @@ function demoObjects() {
     box1.isPickable = true;
     box1.receiveShadows = true;
 
-    const box2 = BABYLON.MeshBuilder.CreateBox("stairs", {
+    const box2 = BABYLON.MeshBuilder.CreateBox("scalable", {
         size: 5,
         width: 5,
         height: 0.5
@@ -163,7 +188,7 @@ function demoObjects() {
     box2.isPickable = true;
     box2.receiveShadows = true;
 
-    const box3 = BABYLON.MeshBuilder.CreateBox("stairs", {
+    const box3 = BABYLON.MeshBuilder.CreateBox("scalable", {
         size: 3,
         width: 3,
         height: 1
@@ -176,7 +201,7 @@ function demoObjects() {
     box3.isPickable = true;
     box3.receiveShadows = true;
 
-    const box4 = BABYLON.MeshBuilder.CreateBox("stairs", {
+    const box4 = BABYLON.MeshBuilder.CreateBox("scalable", {
         size: 3,
         width: 3,
         height: 1
@@ -188,7 +213,7 @@ function demoObjects() {
     box4.isPickable = true;
     box4.receiveShadows = true;
 
-    const box5 = BABYLON.MeshBuilder.CreateBox("stairs", {
+    const box5 = BABYLON.MeshBuilder.CreateBox("scalable", {
         size: 4,
         width: 4,
         height: 1
@@ -201,7 +226,7 @@ function demoObjects() {
     box5.isPickable = true;
     box5.receiveShadows = true;
 
-    const ramp = BABYLON.MeshBuilder.CreateBox("ramp", {
+    const ramp = BABYLON.MeshBuilder.CreateBox("scalable", {
         size: 3,
         width: 6,
         height: 1
@@ -214,7 +239,7 @@ function demoObjects() {
     ramp.receiveShadows = true;
     ramp.rotation.x += Math.PI / 5;
 
-    const ramp2 = BABYLON.MeshBuilder.CreateBox("ramp", {
+    const ramp2 = BABYLON.MeshBuilder.CreateBox("scalable", {
         size: 8,
         width: 6,
         height: 1
@@ -232,14 +257,14 @@ function demoObjects() {
     var stairsArray = [];
     for (let index = 0; index < 10; index++) {
         
-        var stairs0 = BABYLON.MeshBuilder.CreateBox("stairs", {size: 1, width: 5, height: 0.4}, scene);
+        var stairs0 = BABYLON.MeshBuilder.CreateBox("scalable", {size: 1, width: 5, height: 0.4}, scene);
         stairs0.position.y = -0.22 + 0.2*index;
         stairs0.position.z = 0.5*index;
         stairsArray.push(stairs0);
     }
 
     var mergeStairs = new BABYLON.Mesh.MergeMeshes(stairsArray, true);
-    mergeStairs.name = "stairs";
+    mergeStairs.name = "scalable";
     mergeStairs.checkCollisions = true;
     mergeStairs.isPickable = true;
     mergeStairs.position.x = 4;
@@ -248,7 +273,7 @@ function demoObjects() {
     mergeStairs.receiveShadows = true;
 
     var mergeStairs2 = mergeStairs.clone();
-    mergeStairs2.name = "stairs";
+    mergeStairs2.name = "scalable";
     mergeStairs2.checkCollisions = true;
     mergeStairs2.isPickable = true;
     mergeStairs2.position.x = -1;
@@ -301,6 +326,7 @@ function importModelAsync(model) {
 
             // Get Player meshes
             result.meshes.forEach((mesh)=>{
+                mesh.receiveShadows = true;
                 mesh.isPickable = false;
             });
 
@@ -308,14 +334,11 @@ function importModelAsync(model) {
             player = BABYLON.MeshBuilder.CreateBox("player", { width: 0.5, height: 1, size:0.5}, scene);
             player.visibility = 0;
             player.ellipsoid = new BABYLON.Vector3(0.5, 0.5, 0.5);
-            player.position.y += 0.5;
+            player.position.y = 0.5;
             player.isPickable = false;
             player.checkCollisions = true;
             player.addChild(result.meshes[0]);
 
-            result.meshes.forEach((mesh)=>{
-                mesh.receiveShadows = true;
-            });
 
             scene.getMaterialByName("Metal").roughness = 0.6;
 
@@ -343,6 +366,7 @@ function importModelAsync(model) {
             setReflections();
             setShadows();
             setPostProcessing();
+            optimizeScene();
 
             setTimeout(() => {
                 hideLoadingView();              
@@ -351,6 +375,26 @@ function importModelAsync(model) {
             // Set Player Controller -- controller.js
             setPlayerMovement();
         });
+}
+
+function optimizeScene() {
+    // Hardware Scaling
+    var options = new BABYLON.SceneOptimizerOptions(50, 500);
+    options.addOptimization(new BABYLON.HardwareScalingOptimization(0, 1));
+    // options.addOptimization(new BABYLON.MergeMeshesOptimization(0));
+    // options.addOptimization(new BABYLON.ShadowsOptimization(0));
+    // options.addOptimization(new BABYLON.ParticlesOptimization(0));
+    // options.addOptimization(new BABYLON.PostProcessesOptimization(0));
+    var optimizer = new BABYLON.SceneOptimizer(scene, options);
+    optimizer.start();
+
+    scene.skipPointerMovePicking = true;
+    scene.autoClear = false; // Color buffer
+    scene.autoClearDepthAndStencil = false; // Depth and stencil, obviously
+    scene.getAnimationRatio();
+    scene.blockfreeActiveMeshesAndRenderingGroups = true;
+
+    // scene.performancePriority = BABYLON.ScenePerformancePriority.Intermediate;
 }
 
 
@@ -400,7 +444,7 @@ function setPostProcessing() {
         scene, // The scene instance
         [scene.activeCamera] // The list of cameras to be attached to
     );
-    pipeline.samples = 4;
+    pipeline.samples = 1;
     pipeline.bloomEnabled = false;
 }
 

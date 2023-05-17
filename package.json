@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "babylonjs": "^6.3.1",
+    "babylonjs-gui": "^6.3.1",
     "babylonjs-loaders": "^6.3.1",
     "babylonjs-materials": "^6.3.1",
     "pepjs": "^0.5.3"
