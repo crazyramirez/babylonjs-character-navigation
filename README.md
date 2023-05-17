@@ -18,3 +18,4 @@ https://www.viseni.com/character_navigation
 - Improve jump movement
 - Add new animiations (Jumping, Falling...)
 - Add support for double jump
+- Add a nice 3D Environment Scene
