@@ -32,7 +32,7 @@ var particleSystem
 function updateMovement(deltaTime) {
     gravity = deltaTime / gravityMultiplier;
     ramps.forEach((ramp)=>{
-        if (player.intersectsMesh(ramp))
+        if (player.intersectsMesh(ramp, true))
         {
             jumpValue = deltaTime * 0.01;
             gravity = 0.08;
@@ -87,7 +87,7 @@ function setPlayerMovement() {
         return;
     }
 
-    
+
     // Update Movement Keyboard Controller
     scene.registerBeforeRender(()=>{
        
