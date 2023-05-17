@@ -5,8 +5,8 @@ The main purpose is to use linear movement and in this case don´t use physics.
 The character moves using MoveWithCollisions function and simulates gravity.
 
 Control is easy
-Use WASD controls and arrows on the computer.
-On mobile use the Left Stick for movement and the Right Stick to turn the character.
+Use WASD controls and arrows on the computer and Space to Jump.
+On mobile use the Left Stick for movement, the Right Stick to turn the character and Button to Jump.
 
 Try the LIVE Demo
 
