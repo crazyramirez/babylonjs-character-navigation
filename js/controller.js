@@ -10,7 +10,7 @@ var rotationAxis;
 
 // Speed Movement
 var speedMovement = 0.002;
-var joystickSpeedMovement = 0.005;
+var joystickSpeedMovement = 0.0055;
 
 // Simulated Gravity
 var gravity;
