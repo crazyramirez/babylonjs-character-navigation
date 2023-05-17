@@ -1,0 +1,183 @@
+/* HTML -- Body */
+html, body {
+    touch-action: pan-y;
+    overflow: hidden;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    background-color: #8bb4ff;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+    /* touch-action: none */
+}
+
+/* BJS Render Canvas */
+#renderCanvas {
+    position: absolute;
+    background-color: black;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+    /* touch-action: none; */
+}
+
+/* Stats & Tap Info DIV */
+#stats-div {
+    z-index: 199;
+    position: fixed;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    overflow: hidden;
+    pointer-events: none;
+    touch-action: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+}
+
+#stats-text {
+    display: inline-block;
+    color: rgb(255, 255, 255);
+    width: 100%;
+    height: 100%;
+    font-size: medium;
+    text-shadow: 0 0 5px #0000009c;
+}
+
+/* Loader */
+#loadingDiv {
+    z-index: 200;
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    background: #8bb4ff; /* Old browsers */
+    background: -moz-linear-gradient(top, #8bb4ff 0%,#ff60f2 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  #8bb4ff 0%,#ff60f2 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  #8bb4ff 0%,#ff60f2 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FB7BA2', endColorstr='#FCE043',GradientType=0 ); /* IE6-9 */
+    /* border: 25px solid rgb(255, 255, 255); */
+    touch-action: none;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+}
+
+.loading-hidden {
+    animation: loading-div-hidden 800ms ease forwards;
+}
+
+@keyframes loading-div-hidden{
+    0% {
+        opacity: 100%;
+    }
+    100% {
+        opacity: 0%;
+    }
+}
+
+#navbar {
+    z-index: 199;
+    padding: 20px !important; 
+    /* background-color: rgba(255, 255, 255, 0.25) !important; */
+}
+
+.navbar-toggler-icon {
+    font-size: 1rem;
+    width: 1.2em;
+    height: 1.2em;
+}
+
+#loadingText {
+    position: absolute;
+    color: white;
+    display: inline-block;
+    box-sizing: border-box;
+    text-align: center;
+    font-size: x-small;
+
+    width: 100%;
+    top: 50%;
+    left: 50%;
+    height: 50px;
+    transform: translate(-50%, -50%);
+    margin-top: 40px;
+    letter-spacing: 0.3rem;
+    touch-action: none;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+    /* animation: animText  6s ease infinite alternate; */
+}
+
+@keyframes animText {
+    0% {
+        letter-spacing: 0.2rem;
+    }
+    100% {
+        letter-spacing: 0.4rem;
+    }
+}
+
+.loader {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: 48px;
+    height: 48px;
+    display: inline-block;
+    position: relative;
+  }
+.loader::after,
+.loader::before {
+    content: '';  
+    box-sizing: border-box;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid #FFF;
+    position: absolute;
+    left: 0;
+    top: 0;
+    animation: animloader 2s linear infinite;
+}
+.loader::after {
+    animation-delay: 1s;
+}
+  
+@keyframes animloader {
+    0% {
+      transform: scale(0);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(2);
+      opacity: 0;
+    }
+}
+
+#customBT {
+    z-index: 199;
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    color: white;
+    border-color: none;
+    font-size: small;
+    padding: 20px;
+}
+
+#customBT img {
+    width: 80px;
+    opacity: 0.5;
+}
