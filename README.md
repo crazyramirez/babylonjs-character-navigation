@@ -10,7 +10,7 @@ On mobile use the Left Stick for movement, the Right Stick to turn the character
 
 Try the LIVE Demo
 
-https://www.viseni.com/character_navigation/
+https://www.viseni.com/character_navigation
 
 
 -- TO DO --
