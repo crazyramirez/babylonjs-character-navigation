@@ -15,8 +15,8 @@ var joystickSpeedMovement = 0.0055;
 
 // Simulated Gravity
 var gravity;    
-var gravityMultiplier = 3000;
-var jumpMultiplier = 0.17;
+var gravityMultiplier = 1700;
+var jumpMultiplier = 0.3;
 let onGround = false;
 let onScalable = false;
 
@@ -58,8 +58,13 @@ function updateMovement(deltaTime) {
             onScalable = true;
             // jumpValue = deltaTime * 0.02;
             jumpValue = engine.getFps() * 0.1 / 60;
-            console.log("JumpValue" + jumpValue);
+            // console.log("JumpValue" + jumpValue);
             gravity = engine.getFps() * 0.05 / 60;
+
+            // setTimeout(() => {
+            //     gravity = deltaTime / gravityMultiplier * 2;
+            // }, 200);
+
             if (jumpPressed)
             {
                 jumpValue = deltaTime * jumpMultiplier;
@@ -75,8 +80,8 @@ function updateMovement(deltaTime) {
         jumpValue = deltaTime * jumpMultiplier;
     } 
 
-    if (jumpValue > deltaTime * jumpMultiplier)
-        jumpValue = deltaTime * jumpMultiplier;
+    if (jumpValue > deltaTime * jumpMultiplier * 1.1)
+        jumpValue = deltaTime * jumpMultiplier * 1.1;
 
 
     // if (onGround)
@@ -396,7 +401,7 @@ function* animationBlending (fromAnim, toAnim, speed, blendingSpeed) {
 
 // Smoke Particles
 function createSmokeParticles() { 
-    particleSystem = new BABYLON.ParticleSystem("particles", 200, scene);
+    particleSystem = new BABYLON.ParticleSystem("particles", 50, scene);
     particleSystem.particleTexture = new BABYLON.Texture("./resources/images/smoke.png", scene);
     particleSystem.emitter = new BABYLON.Vector3(player.position.x, 0, player.position.z);
     particleSystem.minEmitBox = new BABYLON.Vector3(-0.1, -0.1, -0.1); // Starting all from
@@ -407,7 +412,7 @@ function createSmokeParticles() {
     particleSystem.maxSize = 0.25
     particleSystem.minLifeTime = 0.2;
     particleSystem.maxLifeTime = 1;
-    particleSystem.emitRate = 200;
+    particleSystem.emitRate = 100;
     particleSystem.addSizeGradient(0, 0.1, 0.3); //size range at start of particle lifetime
     particleSystem.addSizeGradient(1.0, 1, 2); //size range at end of particle lifetime
     particleSystem.addColorGradient(0, new BABYLON.Color4(0.9, 0.7, 0.5, 0.2)); //color at start of particle lifetime
