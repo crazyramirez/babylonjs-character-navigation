@@ -18,6 +18,12 @@ var gravityMultiplier = 3000;
 var jumpMultiplier = 0.17;
 let onGround = false;
 
+// Check Velocity Y Position for Falling Action
+var previousPosition;
+var previousTime;
+var velocity;
+var falling;
+
 // RayCast
 const ray = new BABYLON.Ray();
 const rayHelper = new BABYLON.RayHelper(ray); 
@@ -29,6 +35,7 @@ var ramps = [];
 var particleSystem
 
 
+// Update Movement
 function updateMovement(deltaTime) {
     gravity = deltaTime / gravityMultiplier;
     ramps.forEach((ramp)=>{
@@ -53,11 +60,26 @@ function updateMovement(deltaTime) {
 
     if (jumpValue > deltaTime * jumpMultiplier*1.2)
         jumpValue = deltaTime * jumpMultiplier*1.2;
-    
+
     // Update Base FrontVector
     frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/30,0));
     // Update Particle System Position
     particleSystem.emitter = new BABYLON.Vector3(player.position.x, 0, player.position.z);
+}
+
+// Check Velocity Y Position for Falling Action
+function checkVelocity() {
+    var currentTime = performance.now();
+    var deltaTime = (currentTime - previousTime) / 1000; // Convert to seconds
+  
+    // Calculate velocity
+    var currentPosition = player.position.clone();
+    var displacement = currentPosition.subtract(previousPosition);
+    velocity = displacement.scale(1 / deltaTime);
+  
+    // Update previous values
+    previousPosition.copyFrom(currentPosition);
+    previousTime = currentTime;
 }
 
 // Player Movement //
@@ -68,6 +90,10 @@ function setPlayerMovement() {
     // Create Ray Helper
     rayHelper.attachToMesh(player, new BABYLON.Vector3(0, -0.98, 0), new BABYLON.Vector3(0, -0.47, 0), 0.2);
     rayHelper.show(scene, new BABYLON.Color3(1, 0, 0));
+
+    // Position & Time for Velocity 
+    previousPosition = player.position.clone();
+    previousTime = performance.now();
 
     // Find Ramps on the Scene
     scene.meshes.forEach((mesh)=>{
@@ -87,7 +113,6 @@ function setPlayerMovement() {
         return;
     }
 
-
     // Update Movement Keyboard Controller
     scene.registerBeforeRender(()=>{
        
@@ -104,7 +129,7 @@ function setPlayerMovement() {
             if (onGround)
             {
                 // jumpValue -= gravity * deltaTime;
-                scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runAnim,  1.2));
+                scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runAnim, 1.2, 0.03));
                 particleSystem.start();
             }
             currentAnim = runAnim;
@@ -115,7 +140,7 @@ function setPlayerMovement() {
             if (onGround)
             {
                 // jumpValue -= gravity * deltaTime;
-                scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runBackAnim, 1.5));
+                scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runBackAnim, 1.5, 0.03));
                 particleSystem.start();
             }
             
@@ -140,22 +165,14 @@ function setPlayerMovement() {
             // Check if Player is currently moving
             if (isSPressed == false && isWPressed == false && onGround) {
                 currentAnim = walkAnim;
-                scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, walkAnim, 0.9));
+                scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, walkAnim, 0.9, 0.03));
             }
         }
 
         // Check Idle Animation
         if (! isWPressed && ! isSPressed && ! isAPressed && ! isDPressed) {
             currentAnim = idleAnim;
-            scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, idleAnim, 1.0));
-        }
-
-        if (!onGround)
-        {
-            walkAnim.speedRatio = 0.4;
-            walkAnim.play(false);
-            currentAnim = walkAnim;
-            particleSystem.stop();
+            scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, idleAnim, 1.0, 0.03));
         }
 
         if (!isWPressed && !isSPressed)
@@ -163,9 +180,33 @@ function setPlayerMovement() {
             particleSystem.stop()
         }
 
+        if (!onGround && !falling)
+        {
+            // scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, walkAnim, 0.5, 0.03));
+            runBackAnim.speedRatio = 0.5;
+            runBackAnim.play(false);
+            currentAnim = runBackAnim;
+            particleSystem.stop();
+        } else if (!onGround && falling) {
+
+        } else {
+            falling = false;
+        }
+
+        if (!jumpPressed && !onGround && Math.round(velocity.y) == 0 && !falling)
+        {
+            falling = true;
+            console.log("Falling");
+        }
+
+        checkVelocity();
         player.moveWithCollisions(frontVector);
+        // console.log('Velocity:', velocity.y);
+
+
     });
 }
+
 
 // Keyboard Actions KeyDown//
 document.addEventListener("keydown", function (event) {
@@ -284,15 +325,29 @@ function setJoystickController() {
             scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, idleAnim, 1.0));
         }
 
-        if (!onGround)
+        if (!onGround && !falling)
         {
-            walkAnim.speedRatio = 0.4;
-            walkAnim.play(false);
-            currentAnim = walkAnim;
+            // scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, walkAnim, 0.5, 0.03));
+            runBackAnim.speedRatio = 0.5;
+            runBackAnim.play(false);
+            currentAnim = runBackAnim;
             particleSystem.stop();
+        } else if (!onGround && falling) {
+
+        } else {
+            falling = false;
         }
 
+        if (!jumpPressed && !onGround && Math.round(velocity.y) == 0 && !falling)
+        {
+            falling = true;
+            console.log("Falling");
+        }
+
+        checkVelocity();
         player.moveWithCollisions(frontVector);
+        // console.log('Velocity:', velocity.y);
+
     });
 }
 
@@ -308,8 +363,7 @@ function jumpFromBT() {
 
 
 // Animation Blending //
-var blendingSpeed = 0.03;
-function* animationBlending (fromAnim, toAnim, speed) {
+function* animationBlending (fromAnim, toAnim, speed, blendingSpeed) {
     toAnim.start(false, speed, toAnim.from, toAnim.to, false);
     let currentWeight = 1;
     let newWeight = 0;
