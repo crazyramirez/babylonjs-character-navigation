@@ -254,7 +254,7 @@ function importModelAsync(model) {
                 mesh.isPickable = false;
             });
 
-            // Crear un objeto de colisión con una caja
+            // Main Player Collision Box
             player = BABYLON.MeshBuilder.CreateBox("player", { width: 0.4, height: 1, size:0.4}, scene);
             player.visibility = 0;
             player.ellipsoid = new BABYLON.Vector3(0.5, 0.5, 0.5);

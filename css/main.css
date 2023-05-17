@@ -71,19 +71,6 @@ html, body {
     user-select: none; /* Standard syntax */
 }
 
-.loading-hidden {
-    animation: loading-div-hidden 800ms ease forwards;
-}
-
-@keyframes loading-div-hidden{
-    0% {
-        opacity: 100%;
-    }
-    100% {
-        opacity: 0%;
-    }
-}
-
 #navbar {
     z-index: 199;
     padding: 20px !important; 

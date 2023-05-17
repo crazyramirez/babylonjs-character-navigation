@@ -18,7 +18,6 @@ var gravityMultiplier = 3000;
 var jumpMultiplier = 0.15;
 let onGround = false;
 
-
 // RayCast
 const ray = new BABYLON.Ray();
 const rayHelper = new BABYLON.RayHelper(ray); 
