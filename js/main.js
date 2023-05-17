@@ -64,8 +64,6 @@ function startGame() {
     shadowGenerator.filteringQuality = 1;
 
     // Ground
-    ground = BABYLON.MeshBuilder.CreateCylinder("ground", {diameter: 70, height: 0.2, tessellation: 80}, scene);
-    ground.position.y = -0.1;
     var groundMaterial = new BABYLON.PBRMaterial("groundMaterial", scene);
     groundMaterial.albedoTexture = new BABYLON.Texture("./resources/textures/ground.jpg", scene);
     groundMaterial.albedoTexture.uScale = 20;
@@ -79,6 +77,9 @@ function startGame() {
     groundMaterial.height.vScale = 20;
     groundMaterial.roughness = 0.7;
     groundMaterial.metallic = 0;
+
+    ground = BABYLON.MeshBuilder.CreateCylinder("ground", {diameter: 70, height: 0.2, tessellation: 80}, scene);
+    ground.position.y = -0.1;
     ground.material = groundMaterial;
     ground.checkCollisions = true;
     ground.isPickable = true;
@@ -136,7 +137,7 @@ function demoObjects() {
     });
 
     // Boxes
-    const box1 = BABYLON.MeshBuilder.CreateBox("box1", {
+    const box1 = BABYLON.MeshBuilder.CreateBox("stairs", {
         size: 3,
         width: 3,
         height: 1
@@ -149,7 +150,7 @@ function demoObjects() {
     box1.isPickable = true;
     box1.receiveShadows = true;
 
-    const box2 = BABYLON.MeshBuilder.CreateBox("box2", {
+    const box2 = BABYLON.MeshBuilder.CreateBox("stairs", {
         size: 5,
         width: 5,
         height: 0.5
@@ -162,7 +163,7 @@ function demoObjects() {
     box2.isPickable = true;
     box2.receiveShadows = true;
 
-    const box3 = BABYLON.MeshBuilder.CreateBox("box3", {
+    const box3 = BABYLON.MeshBuilder.CreateBox("stairs", {
         size: 3,
         width: 3,
         height: 1
@@ -175,7 +176,7 @@ function demoObjects() {
     box3.isPickable = true;
     box3.receiveShadows = true;
 
-    const box4 = BABYLON.MeshBuilder.CreateBox("box4", {
+    const box4 = BABYLON.MeshBuilder.CreateBox("stairs", {
         size: 3,
         width: 3,
         height: 1
@@ -187,7 +188,7 @@ function demoObjects() {
     box4.isPickable = true;
     box4.receiveShadows = true;
 
-    const box5 = BABYLON.MeshBuilder.CreateBox("box5", {
+    const box5 = BABYLON.MeshBuilder.CreateBox("stairs", {
         size: 4,
         width: 4,
         height: 1

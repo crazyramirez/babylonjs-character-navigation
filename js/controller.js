@@ -15,8 +15,8 @@ var joystickSpeedMovement = 0.0055;
 
 // Simulated Gravity
 var gravity;    
-var gravityMultiplier = 3000;
-var jumpMultiplier = 0.15;
+var gravityMultiplier = 2000;
+var jumpMultiplier = 0.17;
 let onGround = false;
 
 // Check Velocity Y Position for Falling Action
@@ -104,7 +104,7 @@ function setPlayerMovement() {
     onGround = false;
 
     // Create Ray Helper
-    rayHelper.attachToMesh(player, new BABYLON.Vector3(0, -0.98, 0), new BABYLON.Vector3(0, -0.47, 0), 0.2);
+    rayHelper.attachToMesh(player, new BABYLON.Vector3(0, -0.98, 0), new BABYLON.Vector3(0, -0.47, 0), 0.4);
     rayHelper.show(scene, new BABYLON.Color3(1, 0, 0));
 
     // Position & Time for Velocity 
