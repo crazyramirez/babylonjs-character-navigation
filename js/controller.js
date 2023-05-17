@@ -7,6 +7,7 @@ var jumpPressed = false;
 var jumpValue = 0;
 var frontVector;
 var rotationAxis;
+var doubleJump;
 
 // Speed Movement
 var speedMovement = 0.002;
@@ -56,7 +57,7 @@ function updateMovement(deltaTime) {
     {
         onGround = false;
         jumpValue = deltaTime * jumpMultiplier*1.2;
-    }
+    } 
 
     if (jumpValue > deltaTime * jumpMultiplier*1.2)
         jumpValue = deltaTime * jumpMultiplier*1.2;
