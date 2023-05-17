@@ -12,6 +12,7 @@ Try the LIVE Demo
 
 https://www.viseni.com/character_navigation/
 
+
 -- TO DO --
 - Clean & improve code
 - Improve jump movement
