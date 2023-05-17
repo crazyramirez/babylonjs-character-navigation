@@ -202,8 +202,6 @@ function setPlayerMovement() {
         checkVelocity();
         player.moveWithCollisions(frontVector);
         // console.log('Velocity:', velocity.y);
-
-
     });
 }
 
@@ -347,7 +345,6 @@ function setJoystickController() {
         checkVelocity();
         player.moveWithCollisions(frontVector);
         // console.log('Velocity:', velocity.y);
-
     });
 }
 
