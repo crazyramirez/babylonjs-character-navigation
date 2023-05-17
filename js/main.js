@@ -244,6 +244,7 @@ function demoObjects() {
     mergeStairs.position.x = 4;
     mergeStairs.position.y = 0;
     mergeStairs.position.z = 10;
+    mergeStairs.receiveShadows = true;
 
     var mergeStairs2 = mergeStairs.clone();
     mergeStairs2.name = "stairs";
@@ -252,6 +253,7 @@ function demoObjects() {
     mergeStairs2.position.x = -1;
     mergeStairs2.position.y = 0;
     mergeStairs2.position.z = 16;   
+    mergeStairs2.receiveShadows = true;
 
     var groundMaterial = new BABYLON.PBRMaterial("groundMaterial", scene);
     groundMaterial.albedoTexture = new BABYLON.Texture("./resources/textures/ground.jpg", scene);
