@@ -180,4 +180,8 @@ html, body {
 #customBT img {
     width: 80px;
     opacity: 0.5;
+    touch-action: none;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
 }

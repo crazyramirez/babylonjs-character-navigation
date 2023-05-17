@@ -80,8 +80,6 @@ function startGame() {
     groundMaterial.roughness = 0.7;
     groundMaterial.metallic = 0;
     ground.material = groundMaterial;
-
-
     ground.checkCollisions = true;
     ground.isPickable = true;
     ground.receiveShadows = true;
@@ -150,7 +148,6 @@ function demoObjects() {
     box1.isPickable = true;
     box1.receiveShadows = true;
 
-
     const box2 = BABYLON.MeshBuilder.CreateBox("box2", {
         size: 2
     }, scene);
@@ -173,7 +170,6 @@ function demoObjects() {
     box3.checkCollisions = true;
     box3.isPickable = true;
     box3.receiveShadows = true;
-
 
     const box4 = BABYLON.MeshBuilder.CreateBox("box1", {
         size: 3,
@@ -254,21 +250,18 @@ function importModelAsync(model) {
         BABYLON.SceneLoader.ImportMeshAsync(null, "./resources/models/" , model, scene).then(function (result) {
 
             // Get Player meshes
-            result.meshes[0].isPickable = false;
-            result.meshes[1].isPickable = false;
-            result.meshes[2].isPickable = false;
-            result.meshes[3].isPickable = false;
+            result.meshes.forEach((mesh)=>{
+                mesh.isPickable = false;
+            });
 
             // Crear un objeto de colisión con una caja
             player = BABYLON.MeshBuilder.CreateBox("player", { width: 0.4, height: 1, size:0.4}, scene);
             player.visibility = 0;
             player.ellipsoid = new BABYLON.Vector3(0.5, 0.5, 0.5);
-
             player.position.y += 0.5;
-            player.addChild(result.meshes[0]);
             player.isPickable = false;
-
             player.checkCollisions = true;
+            player.addChild(result.meshes[0]);
 
             result.meshes.forEach((mesh)=>{
                 mesh.receiveShadows = true;
@@ -286,7 +279,6 @@ function importModelAsync(model) {
             idleAnim.setWeightForAllAnimatables(1.0);
             walkAnim.setWeightForAllAnimatables(0);
             runAnim.setWeightForAllAnimatables(0);
-
         }),
 
         ]).then(() => {
@@ -300,15 +292,14 @@ function importModelAsync(model) {
             setLighting();    
             setReflections();
             setShadows();
-            
             setPostProcessing();
-
-            // Set Player Controller -- controller.js
-            setPlayerMovement();
 
             setTimeout(() => {
                 hideLoadingView();              
-            }, 1500);
+            }, 500);
+
+            // Set Player Controller -- controller.js
+            setPlayerMovement();
         });
 }
 
@@ -372,41 +363,3 @@ function hideLoadingView() {
 window.addEventListener("resize", function () {
     engine.resize();
 });
-
-// Ambient Occlusion
-var ssao;
-var ssaoRatio = {
-    ssaoRatio: 0.5, // Ratio of the SSAO post-process, in a lower resolution
-    combineRatio: 1.0 // Ratio of the combine post-process (combines the SSAO and the scene)
-};
-
-function toggleAO() {
-
-    if (aoActive)
-    {
-        ssao.dispose();
-        aoActive = false;
-    } else {    
-        setSSAO();
-        aoActive = true;
-    }
-}
-
-function setSSAO() { 
-    aoActive = true;
-
-    ssao = new BABYLON.SSAO2RenderingPipeline("ssao2", scene, 1, [scene.activeCamera], true);
-    ssao.samples = 16;
-    ssao.radius = 0.6;
-    ssao.totalStrength = 0.85;
-    ssao.epsilon = 0.07;
-    ssao.bilateralSamples = 16;
-    ssao.bilateralSoften = 1;
-    // ssao = new BABYLON.SSAO2RenderingPipeline("ssao", scene, ssaoRatio);
-    // ssao.fallOff = 0.000001;
-    // ssao.area = 1;
-    // ssao.radius = 0.0001;
-    // ssao.totalStrength = 1.0;
-    // ssao.base = 0.5;
-    // scene.postProcessRenderPipelineManager.attachCamerasToRenderPipeline("ssao", camera);
-}
