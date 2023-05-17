@@ -281,16 +281,16 @@ function setJoystickController() {
                 if (onGround)
                 {
                     jumpValue -= gravity * deltaTime;
-                    scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runAnim, 1.5));
+                    scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runAnim, 1.5, 0.03));
                     particleSystem.start();
                 }
                 currentAnim = runAnim;
             } else if (leftJoystick.deltaPosition.y < 0) {
-                scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runAnim, 1.2));
+                scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runAnim, 1.2, 0.03));
                 if (onGround)
                 {
                     jumpValue -= gravity * deltaTime;
-                    scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runBackAnim, 1.5));
+                    scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runBackAnim, 1.5, 0.03));
                     particleSystem.start();
                 }
 
@@ -313,7 +313,7 @@ function setJoystickController() {
             if (!leftJoystick.pressed && rightJoystick.deltaPosition.x != 0)
             {
                 currentAnim = walkAnim;
-                scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, walkAnim, 1.0));
+                scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, walkAnim, 1.0, 0.03));
             }
         } else {
             rightJoystick.deltaPosition.x = 0;
@@ -322,7 +322,7 @@ function setJoystickController() {
         // Check Idle Animation
         if (!leftJoystick.pressed && !rightJoystick.pressed) {
             currentAnim = idleAnim;
-            scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, idleAnim, 1.0));
+            scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, idleAnim, 1.0, 0.03));
         }
 
         if (!onGround && !falling)
