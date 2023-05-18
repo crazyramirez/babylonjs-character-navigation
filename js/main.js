@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", startGame);
 
 // Global BabylonJS Variables
 var canvas = document.getElementById("renderCanvas");
-var engine = new BABYLON.Engine(canvas, true, { stencil: false }, true);
+var engine = new BABYLON.Engine(canvas, true, { stencil: false }, false);
 var scene = createScene(engine, canvas);
 var camera = new BABYLON.ArcRotateCamera("camera", BABYLON.Tools.ToRadians(-90), BABYLON.Tools.ToRadians(65), 6, BABYLON.Vector3.Zero(), scene);
 var dirLight = new BABYLON.DirectionalLight("dirLight", new BABYLON.Vector3(0,0,0), scene);
@@ -183,7 +183,7 @@ function demoObjects() {
     box2.material = basicMaterial;
     box2.position.x = -7;
     box2.position.y = 2;
-    box2.position.z = -3;
+    box2.position.z = -2;
     box2.checkCollisions = true;
     box2.isPickable = true;
     box2.receiveShadows = true;
@@ -381,10 +381,7 @@ function optimizeScene() {
     // Hardware Scaling
     var options = new BABYLON.SceneOptimizerOptions(50, 500);
     options.addOptimization(new BABYLON.HardwareScalingOptimization(0, 1));
-    // options.addOptimization(new BABYLON.MergeMeshesOptimization(0));
-    // options.addOptimization(new BABYLON.ShadowsOptimization(0));
-    // options.addOptimization(new BABYLON.ParticlesOptimization(0));
-    // options.addOptimization(new BABYLON.PostProcessesOptimization(0));
+    options.targetFrameRate = 60;
     var optimizer = new BABYLON.SceneOptimizer(scene, options);
     optimizer.start();
 

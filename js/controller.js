@@ -56,6 +56,9 @@ function updateMovement(deltaTime) {
             onScalable = true;
             jumpValue = engine.getFps() * 0.1 / 60;
             gravity = engine.getFps() * 0.05 / 60;
+            setTimeout(() => {
+                gravity = engine.getFps() * 0.2 / 60;
+            }, 50);
 
             if (jumpPressed)
             {
@@ -114,7 +117,7 @@ function setPlayerMovement() {
 
     // Create Ray Helper
     rayHelper.attachToMesh(player, new BABYLON.Vector3(0, -0.98, 0), new BABYLON.Vector3(0, -0.45, 0.2), 0.4);
-    rayHelper.show(scene, new BABYLON.Color3(1, 0, 0));
+    // rayHelper.show(scene, new BABYLON.Color3(1, 0, 0));
 
     // Position & Time for Velocity 
     previousPosition = player.position.clone();
@@ -403,7 +406,7 @@ function createSmokeParticles() {
     particleSystem.minSize = 0.15;
     particleSystem.maxSize = 0.25
     particleSystem.minLifeTime = 0.2;
-    particleSystem.maxLifeTime = 1;
+    particleSystem.maxLifeTime = 0.5;
     particleSystem.emitRate = 100;
     particleSystem.addSizeGradient(0, 0.1, 0.3); //size range at start of particle lifetime
     particleSystem.addSizeGradient(1.0, 1, 2); //size range at end of particle lifetime
