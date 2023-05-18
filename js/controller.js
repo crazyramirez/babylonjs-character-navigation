@@ -286,7 +286,7 @@ function setJoystickController() {
                 {
                     jumpValue -= gravity * deltaTime;
                     scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runAnim, 1.5, 0.03));
-                    if (velocity.z != 0 && !onScalable)
+                    if (velocity.z != 0 && velocity.y > 0)
                         particleSystem.start();
                     else
                         particleSystem.stop();
@@ -298,7 +298,7 @@ function setJoystickController() {
                 {
                     jumpValue -= gravity * deltaTime;
                     scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runBackAnim, 1.5, 0.03));
-                    if (velocity.z != 0 && !onScalable)
+                    if (velocity.z != 0 && velocity.y > 0)
                         particleSystem.start();
                     else
                         particleSystem.stop();
