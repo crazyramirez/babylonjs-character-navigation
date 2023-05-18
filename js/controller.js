@@ -16,7 +16,7 @@ var joystickSpeedMovement = 0.0055;
 // Simulated Gravity
 var gravity;    
 var gravityMultiplier = 2000;
-var jumpMultiplier = 0.25;
+var jumpMultiplier = 0.3;
 let onGround = false;
 let onScalable = false;
 
