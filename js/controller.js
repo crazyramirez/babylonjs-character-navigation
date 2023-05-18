@@ -16,7 +16,7 @@ var joystickSpeedMovement = 0.0055;
 // Simulated Gravity
 var gravity;    
 var gravityMultiplier = 3000;
-var jumpMultiplier = 0.25;
+var jumpMultiplier = 0.22;
 let onGround = false;
 let onScalable = false;
 
@@ -66,8 +66,7 @@ function updateMovement(deltaTime) {
     if (onScalable) {
         jumpValue = deltaTime * gravity * 0.01;
     }
-    console.log("jumpValue:" + deltaTime * jumpMultiplier);
-
+    // console.log("jumpValue:" + deltaTime * jumpMultiplier);
 
     if (jumpValue > deltaTime * jumpMultiplier)
         jumpValue = deltaTime * jumpMultiplier;
@@ -208,7 +207,7 @@ function setKeyboardController() {
         if (!jumpPressed && !onGround && Math.round(velocity.y) == 0 && !falling)
         {
             falling = true;
-            console.log("Falling");
+            // console.log("Falling");
         }
 
         player.moveWithCollisions(frontVector);
@@ -343,7 +342,7 @@ function setJoystickController() {
         if (!jumpPressed && !onGround && Math.round(velocity.y) == 0 && !falling)
         {
             falling = true;
-            console.log("Falling");
+            // console.log("Falling");
         }
 
         checkPlayerVelocity();
@@ -353,7 +352,7 @@ function setJoystickController() {
 
 // Jump From BT
 function jumpFromBT() {
-    console.log("Jump BT");
+    // console.log("Jump BT");
     if (onGround)
         jumpPressed = true;
     setTimeout(() => {
