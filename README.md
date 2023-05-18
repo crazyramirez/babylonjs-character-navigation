@@ -14,8 +14,8 @@ https://www.viseni.com/character_navigation
 
 
 -- TO DO --
-- Clean & improve code
-- Improve jump movement
+- Clean & improve code ✓
+- Improve jump movement ✓
 - Add new animiations (Jumping, Falling...)
 - Add support for double jump
 - Add a nice 3D Environment Scene
