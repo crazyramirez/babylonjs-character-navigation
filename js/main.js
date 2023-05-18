@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", startGame);
 
 // Global BabylonJS Variables
 var canvas = document.getElementById("renderCanvas");
-var engine = new BABYLON.Engine(canvas, true, { stencil: false }, false);
+var engine = new BABYLON.Engine(canvas, true, { stencil: false }, true);
 var scene = createScene(engine, canvas);
 var camera = new BABYLON.ArcRotateCamera("camera", BABYLON.Tools.ToRadians(-90), BABYLON.Tools.ToRadians(65), 6, BABYLON.Vector3.Zero(), scene);
 var dirLight = new BABYLON.DirectionalLight("dirLight", new BABYLON.Vector3(0,0,0), scene);
