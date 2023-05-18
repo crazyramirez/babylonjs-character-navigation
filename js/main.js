@@ -346,7 +346,7 @@ function importModelAsync(model) {
             player.checkCollisions = true;
             player.addChild(result.meshes[0]);
 
-            player.position = new BABYLON.Vector3(5,3,5);
+            // player.position = new BABYLON.Vector3(5,3,5);
 
 
             scene.getMaterialByName("Metal").roughness = 0.6;
