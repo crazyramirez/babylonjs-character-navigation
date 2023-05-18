@@ -15,8 +15,8 @@ var joystickSpeedMovement = 0.0055;
 
 // Simulated Gravity
 var gravity;    
-var gravityMultiplier = 1800;
-var jumpMultiplier = 0.32;
+var gravityMultiplier = 2500;
+var jumpMultiplier = 0.22;
 let onGround = false;
 let onScalable = false;
 
@@ -59,7 +59,7 @@ function updateMovement(deltaTime) {
     
     // Check Scalables Intersecting
     scalables.forEach((scalable)=>{
-        if (player.intersectsMesh(scalable, true))
+        if (player.intersectsMesh(scalable, true) && onGround)
         {
             console.log("Scalable");
             jumpValue = engine.getFps() * 0.1 / 60;
@@ -69,15 +69,15 @@ function updateMovement(deltaTime) {
             if (jumpPressed && !onGround)
             {
                 onGround = false;
-                jumpValue = deltaTime * jumpMultiplier*0.9;
+                jumpValue = deltaTime * jumpMultiplier*0.8;
                 gravity = deltaTime / gravityMultiplier;
             }
-        } 
+        }
     });
 
     // Set Final Gravity & JumpValue
-    gravity += engine.getFps() / 100000;
-    jumpValue -= gravity * deltaTime;
+    // gravity += engine.getFps() / 100000;
+    jumpValue -= deltaTime * gravity;
 
     // Jump Action
     if (jumpPressed && onGround)
@@ -122,7 +122,7 @@ function checkPlayerVelocity() {
 function setPlayerMovement() {
   
     // Create Ray Helper
-    rayHelper.attachToMesh(player, new BABYLON.Vector3(0, -0.98, 0), new BABYLON.Vector3(0, -0.45, 0.2), 0.35);
+    rayHelper.attachToMesh(player, new BABYLON.Vector3(0, -0.98, 0), new BABYLON.Vector3(0, -0.45, 0.2), 0.45);
     // rayHelper.show(scene, new BABYLON.Color3(1, 0, 0));
 
     // Position & Time for Velocity 
