@@ -16,7 +16,7 @@ var joystickSpeedMovement = 0.0055;
 // Simulated Gravity
 var gravity;    
 var gravityMultiplier = 2000;
-var jumpMultiplier = 0.28;
+var jumpMultiplier = 0.25;
 let onGround = false;
 let onScalable = false;
 
@@ -145,6 +145,7 @@ function setPlayerMovement() {
         var deltaTime = engine.getDeltaTime();
 
         updateMovement(deltaTime);
+        checkVelocity();
 
         // Run Forward
         if (isWPressed) {
@@ -152,18 +153,21 @@ function setPlayerMovement() {
             {
                 // jumpValue -= gravity * deltaTime;
                 scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runAnim, 1.2, 0.03));
-                particleSystem.start();
+                if (velocity.z != 0)
+                    particleSystem.start();
             }
             currentAnim = runAnim;
             frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue,1)).scale(speedMovement*deltaTime*3);
         }
+
         // Run Backward
         if (isSPressed) {
             if (onGround)
             {
                 // jumpValue -= gravity * deltaTime;
                 scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runBackAnim, 1.5, 0.03));
-                particleSystem.start();
+                if (velocity.z != 0)
+                    particleSystem.start();
             }
             
             currentAnim = runBackAnim;
@@ -218,7 +222,6 @@ function setPlayerMovement() {
             console.log("Falling");
         }
 
-        checkVelocity();
         player.moveWithCollisions(frontVector);
     });
 }
@@ -296,7 +299,8 @@ function setJoystickController() {
                 {
                     jumpValue -= gravity * deltaTime;
                     scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runAnim, 1.5, 0.03));
-                    particleSystem.start();
+                    if (velocity.z != 0)
+                        particleSystem.start();
                 }
                 currentAnim = runAnim;
             } else if (leftJoystick.deltaPosition.y < 0) {
@@ -305,7 +309,8 @@ function setJoystickController() {
                 {
                     jumpValue -= gravity * deltaTime;
                     scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runBackAnim, 1.5, 0.03));
-                    particleSystem.start();
+                    if (velocity.z != 0)
+                        particleSystem.start();
                 }
 
                 currentAnim = runBackAnim;
