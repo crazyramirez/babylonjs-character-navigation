@@ -86,7 +86,7 @@ function startGame() {
     ground.receiveShadows = true;
 
     // const ground2 = BABYLON.MeshBuilder.CreateGroundFromHeightMap("ground", "./resources/textures/heightMap2.png", {
-    //     width: 200, height: 200, subdivisions: 100, maxHeight: 5, minHeight: -2
+    //     width: 200, height: 200, subdivisions: 100, maxHeight: 2, minHeight: -2
     // });
     // ground2.position.y = -3;
     // ground2.checkCollisions = true;
@@ -346,8 +346,7 @@ function importModelAsync(model) {
             player.checkCollisions = true;
             player.addChild(result.meshes[0]);
 
-            // player.position = new BABYLON.Vector3(5,3,5);
-
+            // player.position = new BABYLON.Vector3(5,0.5,5);
 
             scene.getMaterialByName("Metal").roughness = 0.6;
 
