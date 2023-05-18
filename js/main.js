@@ -379,7 +379,7 @@ function importModelAsync(model) {
 
 function optimizeScene() {
     // Hardware Scaling
-    var options = new BABYLON.SceneOptimizerOptions(50, 500);
+    var options = new BABYLON.SceneOptimizerOptions(60, 500);
     options.addOptimization(new BABYLON.HardwareScalingOptimization(0, 1));
     options.targetFrameRate = 60;
     var optimizer = new BABYLON.SceneOptimizer(scene, options);
@@ -442,7 +442,6 @@ function setPostProcessing() {
         [scene.activeCamera] // The list of cameras to be attached to
     );
     pipeline.samples = 1;
-    pipeline.bloomEnabled = false;
 }
 
 // Hide Loading View
