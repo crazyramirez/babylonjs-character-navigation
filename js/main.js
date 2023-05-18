@@ -162,7 +162,7 @@ function demoObjects() {
     });
 
     // Boxes
-    const box1 = BABYLON.MeshBuilder.CreateBox("scalable", {
+    const box1 = BABYLON.MeshBuilder.CreateBox("box1", {
         size: 3,
         width: 3,
         height: 1
@@ -174,11 +174,12 @@ function demoObjects() {
     box1.checkCollisions = true;
     box1.isPickable = true;
     box1.receiveShadows = true;
+    box1.meshType = "scalable";
 
-    const box2 = BABYLON.MeshBuilder.CreateBox("scalable", {
+    const box2 = BABYLON.MeshBuilder.CreateBox("box2", {
         size: 5,
         width: 5,
-        height: 0.5
+        height: 0.2
     }, scene);
     box2.material = basicMaterial;
     box2.position.x = -7;
@@ -187,8 +188,9 @@ function demoObjects() {
     box2.checkCollisions = true;
     box2.isPickable = true;
     box2.receiveShadows = true;
+    box2.meshType = "scalable";
 
-    const box3 = BABYLON.MeshBuilder.CreateBox("scalable", {
+    const box3 = BABYLON.MeshBuilder.CreateBox("box3", {
         size: 3,
         width: 3,
         height: 1
@@ -200,8 +202,9 @@ function demoObjects() {
     box3.checkCollisions = true;
     box3.isPickable = true;
     box3.receiveShadows = true;
+    box3.meshType = "scalable";
 
-    const box4 = BABYLON.MeshBuilder.CreateBox("scalable", {
+    const box4 = BABYLON.MeshBuilder.CreateBox("box4", {
         size: 3,
         width: 3,
         height: 1
@@ -212,8 +215,9 @@ function demoObjects() {
     box4.checkCollisions = true;
     box4.isPickable = true;
     box4.receiveShadows = true;
+    box4.meshType = "scalable";
 
-    const box5 = BABYLON.MeshBuilder.CreateBox("scalable", {
+    const box5 = BABYLON.MeshBuilder.CreateBox("box5", {
         size: 4,
         width: 4,
         height: 1
@@ -225,8 +229,9 @@ function demoObjects() {
     box5.checkCollisions = true;
     box5.isPickable = true;
     box5.receiveShadows = true;
+    box5.meshType = "scalable";
 
-    const ramp = BABYLON.MeshBuilder.CreateBox("scalable", {
+    const ramp = BABYLON.MeshBuilder.CreateBox("ramp", {
         size: 3,
         width: 6,
         height: 1
@@ -238,8 +243,9 @@ function demoObjects() {
     ramp.isPickable = true;
     ramp.receiveShadows = true;
     ramp.rotation.x += Math.PI / 5;
+    ramp.meshType = "scalable";
 
-    const ramp2 = BABYLON.MeshBuilder.CreateBox("scalable", {
+    const ramp2 = BABYLON.MeshBuilder.CreateBox("ramp2", {
         size: 8,
         width: 6,
         height: 1
@@ -251,35 +257,37 @@ function demoObjects() {
     ramp2.isPickable = true;
     ramp2.receiveShadows = true;
     ramp2.rotation.x += Math.PI / 5;
-
+    ramp2.meshType = "scalable";
 
     // Stairs
     var stairsArray = [];
     for (let index = 0; index < 10; index++) {
         
-        var stairs0 = BABYLON.MeshBuilder.CreateBox("scalable", {size: 1, width: 5, height: 0.4}, scene);
+        var stairs0 = BABYLON.MeshBuilder.CreateBox("stair", {size: 1, width: 5, height: 0.4}, scene);
         stairs0.position.y = -0.22 + 0.2*index;
         stairs0.position.z = 0.5*index;
         stairsArray.push(stairs0);
     }
 
     var mergeStairs = new BABYLON.Mesh.MergeMeshes(stairsArray, true);
-    mergeStairs.name = "scalable";
+    mergeStairs.name = "stairs_1";
     mergeStairs.checkCollisions = true;
     mergeStairs.isPickable = true;
     mergeStairs.position.x = 4;
     mergeStairs.position.y = 0;
     mergeStairs.position.z = 10;
     mergeStairs.receiveShadows = true;
+    mergeStairs.meshType = "scalable";
 
     var mergeStairs2 = mergeStairs.clone();
-    mergeStairs2.name = "scalable";
+    mergeStairs2.name = "stairs_2";
     mergeStairs2.checkCollisions = true;
     mergeStairs2.isPickable = true;
     mergeStairs2.position.x = -1;
     mergeStairs2.position.y = 0;
     mergeStairs2.position.z = 16;   
     mergeStairs2.receiveShadows = true;
+    mergeStairs2.meshType = "scalable";
 
     var groundMaterial = new BABYLON.PBRMaterial("groundMaterial", scene);
     groundMaterial.albedoTexture = new BABYLON.Texture("./resources/textures/ground.jpg", scene);
@@ -329,9 +337,8 @@ function importModelAsync(model) {
                 mesh.receiveShadows = true;
                 mesh.isPickable = false;
             });
-
             // Main Player Collision Box
-            player = BABYLON.MeshBuilder.CreateCapsule("player", { width: 0.5, height: 1, size:0.5}, scene);
+            player = BABYLON.MeshBuilder.CreateBox("player", { width: 0.5, height: 1, size:0.5}, scene);
             player.visibility = 0;
             player.ellipsoid = new BABYLON.Vector3(0.5, 0.5, 0.5);
             player.position.y = 0.5;
