@@ -15,8 +15,8 @@ var joystickSpeedMovement = 0.0055;
 
 // Simulated Gravity
 var gravity;    
-var gravityMultiplier = 2500;
-var jumpMultiplier = 0.22;
+var gravityMultiplier = 3000;
+var jumpMultiplier = 0.28;
 let onGround = false;
 let onScalable = false;
 
@@ -29,9 +29,8 @@ var falling;
 // RayCast
 const ray = new BABYLON.Ray();
 const rayHelper = new BABYLON.RayHelper(ray); 
-
-// Scalable Objects
-var scalables = [];
+const ray2 = new BABYLON.Ray();
+const rayHelper2 = new BABYLON.RayHelper(ray2); 
 
 // Particle System
 var particleSystem
@@ -41,61 +40,50 @@ var particleSystem
 function updateMovement(deltaTime) {
 
     // Set Initial Gravity
+    // gravity = deltaTime / gravityMultiplier;
     gravity = deltaTime / gravityMultiplier;
+    jumpValue -= deltaTime * gravity;
 
     // RayCast Pick from Player
+    onScalable = false; 
+    var pick2 = scene.pickWithRay(ray2);
+    if (pick2.hit){
+       onGround = true;
+       if (pick2.pickedMesh.meshType && pick2.pickedMesh.meshType == "scalable")
+       {
+            onScalable = true;
+       }
+    } 
     var pick = scene.pickWithRay(ray);
     if (pick.hit){
        onGround = true;
-       onScalable = false; 
        if (pick.pickedMesh.meshType && pick.pickedMesh.meshType == "scalable")
        {
             onScalable = true;
        }
-    } else {
-        onGround = false;
-        onScalable = false;
+    } 
+
+    if (onScalable) {
+        jumpValue = deltaTime * gravity * 0.01;
     }
-    
-    // Check Scalables Intersecting
-    scalables.forEach((scalable)=>{
-        if (player.intersectsMesh(scalable, true) && onGround)
-        {
-            console.log("Scalable");
-            jumpValue = engine.getFps() * 0.1 / 60;
-            gravity = engine.getFps() * 0.05 / 60;
+    console.log("jumpValue:" + deltaTime * jumpMultiplier);
 
-            // Check if Jumping on Scalable
-            if (jumpPressed && !onGround)
-            {
-                onGround = false;
-                jumpValue = deltaTime * jumpMultiplier*0.8;
-                gravity = deltaTime / gravityMultiplier;
-            }
-        }
-    });
 
-    // Set Final Gravity & JumpValue
-    // gravity += engine.getFps() / 100000;
-    jumpValue -= deltaTime * gravity;
+    if (jumpValue > deltaTime * jumpMultiplier)
+        jumpValue = deltaTime * jumpMultiplier;
 
     // Jump Action
     if (jumpPressed && onGround)
     {
         onGround = false;
         jumpValue = deltaTime * jumpMultiplier;
+        if (onScalable)
+            jumpValue = deltaTime * jumpMultiplier*0.8;
     } 
-    if (jumpValue > deltaTime * jumpMultiplier)
-        jumpValue = deltaTime * jumpMultiplier;
-
-    // Testing
-    // if (onGround)
-    //     jumpValue = -deltaTime/30;
-    // else 
-    //     jumpValue -= gravity * deltaTime;
 
     // Update Base FrontVector
-    frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/30,0));
+    frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/20,0));
+    
     // Update Particle System Position
     particleSystem.emitter = new BABYLON.Vector3(player.position.x, player.position.y-0.5, player.position.z);
 
@@ -122,8 +110,10 @@ function checkPlayerVelocity() {
 function setPlayerMovement() {
   
     // Create Ray Helper
-    rayHelper.attachToMesh(player, new BABYLON.Vector3(0, -0.98, 0), new BABYLON.Vector3(0, -0.45, 0.2), 0.45);
-    // rayHelper.show(scene, new BABYLON.Color3(1, 0, 0));
+    rayHelper.attachToMesh(player, new BABYLON.Vector3(0, -0.98, 0.7), new BABYLON.Vector3(0, -0.2, 0.2), 0.35);
+    rayHelper.show(scene, new BABYLON.Color3(1, 0, 0));
+    rayHelper2.attachToMesh(player, new BABYLON.Vector3(0, -0.98, -0.7), new BABYLON.Vector3(0, -0.2, -0.2), 0.35);
+    rayHelper2.show(scene, new BABYLON.Color3(1, 0, 0));
 
     // Position & Time for Velocity 
     previousPosition = player.position.clone();
@@ -131,14 +121,6 @@ function setPlayerMovement() {
 
     // Create Smoke Particles
     createSmokeParticles(player);
-
-    // Find Scalables Meshes on Scene for Intersecting --  Defined by mesh.meshType
-    scene.meshes.forEach((mesh)=>{
-        if (mesh.meshType && mesh.meshType == "scalable")
-        {
-            scalables.push(mesh);
-        }
-    });
 
     // Check if Keyboard or Joystick Controller
     if (isTouch) {
