@@ -54,19 +54,20 @@ function updateMovement(deltaTime) {
         {
             console.log("Scalable");
             onScalable = true;
-            // jumpValue = deltaTime * 0.02;
             jumpValue = engine.getFps() * 0.1 / 60;
-            // console.log("JumpValue" + jumpValue);
             gravity = engine.getFps() * 0.05 / 60;
 
             if (jumpPressed)
             {
-                jumpValue = deltaTime * jumpMultiplier/0.5;
+                // onGround = false;
+                jumpValue = deltaTime * jumpMultiplier/1.2;
                 gravity = deltaTime / gravityMultiplier;
             }
         } 
     });
 
+    gravity += engine.getFps() / 100000;
+    jumpValue -= gravity * deltaTime;
 
     if (jumpPressed && onGround)
     {
@@ -83,8 +84,7 @@ function updateMovement(deltaTime) {
     // else 
     //     jumpValue -= gravity * deltaTime;
 
-    gravity += engine.getFps() / 100000;
-    jumpValue -= gravity * deltaTime;
+
 
     // Update Base FrontVector
     frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/30,0));
@@ -113,7 +113,7 @@ function setPlayerMovement() {
     onGround = false;
 
     // Create Ray Helper
-    rayHelper.attachToMesh(player, new BABYLON.Vector3(0, -0.98, 0), new BABYLON.Vector3(0, -0.45, 0), 0.35);
+    rayHelper.attachToMesh(player, new BABYLON.Vector3(0, -0.98, 0), new BABYLON.Vector3(0, -0.45, 0.2), 0.4);
     rayHelper.show(scene, new BABYLON.Color3(1, 0, 0));
 
     // Position & Time for Velocity 
@@ -181,7 +181,7 @@ function setPlayerMovement() {
         // Rotate actions
         if (isAPressed || isDPressed)
         {
-            player.rotate(rotationAxis, speedMovement*deltaTime, BABYLON.Space.LOCAL);
+            player.rotate(rotationAxis, speedMovement*deltaTime*1.2, BABYLON.Space.LOCAL);
             player.frontVector = new BABYLON.Vector3(Math.sin(player.rotation.z), jumpValue, Math.cos(player.rotation.z))
 
             // Check if Player is currently moving
@@ -202,12 +202,12 @@ function setPlayerMovement() {
             particleSystem.stop()
         }
 
-        if (!onGround)
+        if (!jumpPressed && !onGround)
         {
             // scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, walkAnim, 0.5, 0.03));
             // runBackAnim.stop();
-            runBackAnim.speedRatio = 0.7;
-            runBackAnim.start(false, 0, 10, true);
+            runBackAnim.speedRatio = 0.6;
+            runBackAnim.start(false);
             currentAnim = runBackAnim;
             particleSystem.stop();
         } 
@@ -320,7 +320,7 @@ function setJoystickController() {
         if (rightJoystick.pressed) {
 
             var rotationAxis = new BABYLON.Vector3(0, 1, 0)
-            player.rotate(rotationAxis, rightJoystick.deltaPosition.x*speedMovement*deltaTime, BABYLON.Space.LOCAL);
+            player.rotate(rotationAxis, rightJoystick.deltaPosition.x*speedMovement*deltaTime*1.2, BABYLON.Space.LOCAL);
             player.frontVector = new BABYLON.Vector3(Math.sin(player.rotation.z), jumpValue, Math.cos(player.rotation.z))
 
             // Check if Player is currently moving
@@ -339,18 +339,15 @@ function setJoystickController() {
             scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, idleAnim, 1.0, 0.03));
         }
 
-        if (!onGround && !falling)
+        if (!jumpPressed && !onGround)
         {
             // scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, walkAnim, 0.5, 0.03));
-            runBackAnim.speedRatio = 0.5;
-            runBackAnim.start(false, 0, 10, false);
+            // runBackAnim.stop();
+            runBackAnim.speedRatio = 0.6;
+            runBackAnim.start(false);
             currentAnim = runBackAnim;
             particleSystem.stop();
-        } else if (!onGround && falling) {
-
-        } else {
-            falling = false;
-        }
+        } 
 
         if (!jumpPressed && !onGround && Math.round(velocity.y) == 0 && !falling)
         {
