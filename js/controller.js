@@ -15,8 +15,8 @@ var joystickSpeedMovement = 0.0055;
 
 // Simulated Gravity
 var gravity;    
-var gravityMultiplier = 3000;
-var jumpMultiplier = 0.22;
+var gravityMultiplier = 2000;
+var jumpMultiplier = 0.25;
 let onGround = false;
 let onScalable = false;
 
@@ -64,7 +64,7 @@ function updateMovement(deltaTime) {
     } 
 
     if (onScalable) {
-        jumpValue = deltaTime * gravity * 0.01;
+        jumpValue = deltaTime * gravity * 0.002;
     }
     // console.log("jumpValue:" + deltaTime * jumpMultiplier);
 
@@ -77,7 +77,7 @@ function updateMovement(deltaTime) {
         onGround = false;
         jumpValue = deltaTime * jumpMultiplier;
         if (onScalable)
-            jumpValue = deltaTime * jumpMultiplier*0.8;
+            jumpValue = deltaTime * jumpMultiplier*0.9;
     } 
 
     // Update Base FrontVector
@@ -145,9 +145,10 @@ function setKeyboardController() {
         if (isWPressed) {
             if (onGround)
             {
+                // console.log("Velocity " + velocity.y);
                 // jumpValue -= gravity * deltaTime;
                 scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runAnim, 1.2, 0.03));
-                if (velocity.z != 0 && !onScalable)
+                if (velocity.z != 0 && velocity.y > 0)
                     particleSystem.start();
                 else
                     particleSystem.stop();
@@ -162,7 +163,7 @@ function setKeyboardController() {
             {
                 // jumpValue -= gravity * deltaTime;
                 scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runBackAnim, 1.5, 0.03));
-                if (velocity.z != 0 && !onScalable)
+                if (velocity.z != 0 && velocity.y > 0)
                     particleSystem.start();
                 else
                     particleSystem.stop();

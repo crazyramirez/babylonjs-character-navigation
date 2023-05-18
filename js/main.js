@@ -179,7 +179,7 @@ function demoObjects() {
     const box2 = BABYLON.MeshBuilder.CreateBox("box2", {
         size: 5,
         width: 5,
-        height: 0.2
+        height: 0.4
     }, scene);
     box2.material = basicMaterial;
     box2.position.x = -7;
@@ -338,13 +338,15 @@ function importModelAsync(model) {
                 mesh.isPickable = false;
             });
             // Main Player Collision Box
-            player = BABYLON.MeshBuilder.CreateBox("player", { width: 0.5, height: 1, size:0.5}, scene);
+            player = BABYLON.MeshBuilder.CreateCapsule("player", { width: 0.5, height: 1, size:0.5}, scene);
             player.visibility = 0;
             player.ellipsoid = new BABYLON.Vector3(0.5, 0.5, 0.5);
             player.position.y = 0.5;
             player.isPickable = false;
             player.checkCollisions = true;
             player.addChild(result.meshes[0]);
+
+            player.position = new BABYLON.Vector3(5,3,5);
 
 
             scene.getMaterialByName("Metal").roughness = 0.6;
