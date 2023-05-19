@@ -17,14 +17,13 @@ var joystickSpeedMovement = 0.0055;
 var gravity;    
 var gravityMultiplier = 2000;
 var jumpMultiplier = 0.25;
-let onGround = false;
-let onScalable = false;
-
+var onGround = false;
+var onScalable = false;
 // Check Velocity Y Position for Falling Action
 var previousPosition;
 var previousTime;
 var velocity;
-var falling;
+var falling = false;
 
 // RayCast
 const ray = new BABYLON.Ray();
@@ -76,22 +75,33 @@ function updateMovement(deltaTime) {
     // Jump Action
     if (jumpPressed && onGround)
     {
+        bounceEnabled = true;
         onGround = false;
         jumpValue = deltaTime * jumpMultiplier;
         if (onScalable)
             jumpValue = deltaTime * jumpMultiplier*0.9;
     } 
 
+    // Bounce Player
+    if (onGround && falling)
+    {
+        jumpValue = deltaTime * jumpMultiplier*0.4;
+    }
+
+    // Check OnGround
+    if (!onGround)
+    {
+        particleSystem.stop();
+        bounceEnabled = false;
+    } else {
+        falling = false;
+    }
+
     // Update Base FrontVector
     frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/20,0));
     
     // Update Particle System Position
     particleSystem.emitter = new BABYLON.Vector3(player.position.x, player.position.y-0.5, player.position.z);
-
-    if (!onGround)
-    {
-        particleSystem.stop();
-    } 
 }
 
 // Check Player Velocity Based on Position over time
