@@ -51,17 +51,18 @@ function startGame() {
     scene.collisionsEnabled  = true;
 
     // Directional Light
-    dirLight.intensity = 2.2;
+    dirLight.intensity = 3.2;
     dirLight.position = new BABYLON.Vector3(0,10,10);
-    dirLight.direction = new BABYLON.Vector3(-4, -4, 5);
-    dirLight.shadowMinZ = -100;
-    dirLight.shadowMaxZ = 100;
+    dirLight.direction = new BABYLON.Vector3(-4, -4, 1);
+    dirLight.shadowMinZ = -2.5;
+    dirLight.shadowMaxZ = 11.6;
+    dirLight.diffuse = new BABYLON.Color3.FromInts(234, 170, 133);
 
     // Shadow Generator
-    shadowGenerator.darkness = 0.3;
-    shadowGenerator.bias = 0.001;
+    shadowGenerator.darkness = 0.25;
+    shadowGenerator.bias = 0.05;
     shadowGenerator.usePercentageCloserFiltering = true;
-    shadowGenerator.filteringQuality = 1;
+    shadowGenerator.filteringQuality = 0;
 
     // Ground
     var groundMaterial = new BABYLON.PBRMaterial("groundMaterial", scene);
@@ -120,16 +121,10 @@ function startGame() {
         });
     });
 
-    // scene.debugLayer.show({embedMode: true}).then(function () {
-    // });
+    scene.debugLayer.show({embedMode: true}).then(function () {
+    });
 }
 
-// async function loadGUI() {
-
-//     let advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("GUI", true, scene);  
-//     let loadedGUI = await advancedTexture.parseFromSnippetAsync("#Q6F23Z#2");
-//     loadedGUI.
-// }
 
 async function load3DText() {  
 
@@ -170,30 +165,6 @@ function demoObjects() {
 
     // load3DText();
     
-    // Spheres
-    var sphere1 = BABYLON.MeshBuilder.CreateSphere("sphere1", {diameter: 0.5}, scene);
-    sphere1.position.x = 1.7;
-    sphere1.position.y = 1;
-    sphere1.position.z = 1;
-    var sphere2 = BABYLON.MeshBuilder.CreateSphere("sphere2", {diameter: 0.5}, scene);
-    sphere2.position.x = -1.7;
-    sphere2.position.y = 1;
-    sphere2.position.z = 1;
-    var mat1 = new BABYLON.PBRMaterial("Mat1", scene);
-    mat1.reflectivityColor = new BABYLON.Color3(1,1,1);
-    mat1.microSurface = 0.7;
-    sphere1.material = mat1;
-    sphere2.material = mat1;
-    sphere1.isPickable = false;
-    sphere2.isPickable = false;
-
-    var alpha = 0;
-    scene.registerBeforeRender(function () {
-        scene.getMeshByName("sphere1").position.y = Math.sin(alpha)+1.5;
-        scene.getMeshByName("sphere2").position.y = Math.sin(alpha)+1.5;
-        alpha += 0.01;
-    });
-
     // Boxes
     const box1 = BABYLON.MeshBuilder.CreateBox("box1", {
         size: 3,
@@ -370,6 +341,8 @@ function importModelAsync(model) {
                 mesh.receiveShadows = true;
                 mesh.isPickable = false;
             });
+
+            // console.log("Meshes: " + result.meshes);
             // Main Player Collision Box
             player = BABYLON.MeshBuilder.CreateCapsule("player", { width: 0.5, height: 1, size:0.5}, scene);
             player.visibility = 0;

@@ -110,9 +110,9 @@ function setPlayerMovement() {
   
     // Create Ray Helper
     rayHelper.attachToMesh(player, new BABYLON.Vector3(0, -0.98, 0.7), new BABYLON.Vector3(0, -0.2, 0.2), 0.35);
-    rayHelper.show(scene, new BABYLON.Color3(1, 0, 0));
+    // rayHelper.show(scene, new BABYLON.Color3(1, 0, 0));
     rayHelper2.attachToMesh(player, new BABYLON.Vector3(0, -0.98, -0.7), new BABYLON.Vector3(0, -0.2, -0.2), 0.35);
-    rayHelper2.show(scene, new BABYLON.Color3(1, 0, 0));
+    // rayHelper2.show(scene, new BABYLON.Color3(0, 1, 0));
 
     // Position & Time for Velocity 
     previousPosition = player.position.clone();
@@ -377,21 +377,21 @@ function* animationBlending (fromAnim, toAnim, speed, blendingSpeed) {
 
 // Smoke Particles
 function createSmokeParticles() { 
-    particleSystem = new BABYLON.ParticleSystem("particles", 50, scene);
+    particleSystem = new BABYLON.ParticleSystem("particles", 100, scene);
     particleSystem.particleTexture = new BABYLON.Texture("./resources/images/smoke.png", scene);
     particleSystem.emitter = new BABYLON.Vector3(player.position.x, 0, player.position.z);
-    particleSystem.minEmitBox = new BABYLON.Vector3(-0.1, -0.1, -0.1); // Starting all from
+    particleSystem.minEmitBox = new BABYLON.Vector3(-0.2, -0.1, -0.2); // Starting all from
     particleSystem.maxEmitBox = new BABYLON.Vector3(0.1, 0.1, 0.1); // To...
     particleSystem.colorDead = new BABYLON.Color4(0, 0, 0, 0);
     particleSystem.gravity = new BABYLON.Vector3(0,-3,0);
     particleSystem.minSize = 0.15;
-    particleSystem.maxSize = 0.25
+    particleSystem.maxSize = 0.35;
     particleSystem.minLifeTime = 0.2;
-    particleSystem.maxLifeTime = 0.5;
-    particleSystem.emitRate = 100;
+    particleSystem.maxLifeTime = 0.6;
+    particleSystem.emitRate = 200;
     particleSystem.addSizeGradient(0, 0.1, 0.3); //size range at start of particle lifetime
     particleSystem.addSizeGradient(1.0, 1, 2); //size range at end of particle lifetime
-    particleSystem.addColorGradient(0, new BABYLON.Color4(0.9, 0.7, 0.5, 0.2)); //color at start of particle lifetime
-    particleSystem.addColorGradient(1, new BABYLON.Color4(1, 1, 1, 0)); //color at end of particle lifetime
+    particleSystem.addColorGradient(0, new BABYLON.Color4(0.52, 0.3, 0.2, 0.2)); //color at start of particle lifetime
+    particleSystem.addColorGradient(1, new BABYLON.Color4(1, 0.9, 0.9, 0)); //color at end of particle lifetime
     particleSystem.blendMode = BABYLON.ParticleSystem.BLENDMODE_STANDARD;
 }
