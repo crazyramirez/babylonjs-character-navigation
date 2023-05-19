@@ -31,6 +31,10 @@ const ray = new BABYLON.Ray();
 const rayHelper = new BABYLON.RayHelper(ray); 
 const ray2 = new BABYLON.Ray();
 const rayHelper2 = new BABYLON.RayHelper(ray2); 
+const ray3 = new BABYLON.Ray();
+const rayHelper3 = new BABYLON.RayHelper(ray3); 
+const ray4 = new BABYLON.Ray();
+const rayHelper4 = new BABYLON.RayHelper(ray4); 
 
 // Particle System
 var particleSystem;
@@ -40,6 +44,9 @@ var winFocused = true;
 
 // Update Movement
 function updateMovement(deltaTime) {
+    
+    // Check Player Velocity
+    checkPlayerVelocity();
 
     // Set Initial Gravity
     // gravity = deltaTime / gravityMultiplier;
@@ -70,6 +77,22 @@ function updateMovement(deltaTime) {
     if (pick2.hit){
        onGround = true;
        if (pick2.pickedMesh.meshType && pick2.pickedMesh.meshType == "scalable")
+       {
+            onScalable = true;
+       }
+    } 
+    var pick3 = scene.pickWithRay(ray3);
+    if (pick3.hit){
+       onGround = true;
+       if (pick3.pickedMesh.meshType && pick3.pickedMesh.meshType == "scalable")
+       {
+            onScalable = true;
+       }
+    } 
+    var pick4 = scene.pickWithRay(ray4);
+    if (pick4.hit){
+       onGround = true;
+       if (pick4.pickedMesh.meshType && pick4.pickedMesh.meshType == "scalable")
        {
             onScalable = true;
        }
@@ -136,21 +159,25 @@ function setPlayerMovement() {
 
     setInterval(() => {
         $(window).focus(function() {
-            console.log('Focus');
+            // console.log('Focus');
             winFocused = true;
         });
     
         $(window).blur(function() {
-            console.log('Blur');
+            // console.log('Blur');
             winFocused = false;
         }); 
     }, 500);
   
     // Create Ray Helper
-    rayHelper.attachToMesh(player, new BABYLON.Vector3(0, -0.98, 0.7), new BABYLON.Vector3(0, -0.2, 0.2), 0.35);
-    // rayHelper.show(scene, new BABYLON.Color3(1, 0, 0));
-    rayHelper2.attachToMesh(player, new BABYLON.Vector3(0, -0.98, -0.7), new BABYLON.Vector3(0, -0.2, -0.2), 0.35);
-    // rayHelper2.show(scene, new BABYLON.Color3(0, 1, 0));
+    rayHelper.attachToMesh(player, new BABYLON.Vector3(-1, -0.98, 0.7), new BABYLON.Vector3(0, -0.2, 0.2), 0.35);
+    rayHelper.show(scene, new BABYLON.Color3(1, 0, 0));
+    rayHelper2.attachToMesh(player, new BABYLON.Vector3(-1, -0.98, -0.7), new BABYLON.Vector3(0, -0.2, -0.2), 0.35);
+    rayHelper2.show(scene, new BABYLON.Color3(1, 0, 0));
+    rayHelper3.attachToMesh(player, new BABYLON.Vector3(1, -0.98, 0.7), new BABYLON.Vector3(0, -0.2, 0.2), 0.35);
+    rayHelper3.show(scene, new BABYLON.Color3(0, 1, 0));
+    rayHelper4.attachToMesh(player, new BABYLON.Vector3(1, -0.98, -0.7), new BABYLON.Vector3(0, -0.2, -0.2), 0.35);
+    rayHelper4.show(scene, new BABYLON.Color3(0, 1, 0));
 
     // Position & Time for Velocity 
     previousPosition = player.position.clone();
@@ -167,6 +194,7 @@ function setPlayerMovement() {
     }
 }
 
+var keyboardIncrementalSpeed = 0;
 // Keyboard Controller
 function setKeyboardController() {
     // Update Movement Keyboard Controller
@@ -176,12 +204,15 @@ function setKeyboardController() {
         // Engine DeltaTime
         var deltaTime = engine.getDeltaTime();
 
-        // Update Player Movement
-        checkPlayerVelocity();
         updateMovement(deltaTime);
 
         // Run Forward
         if (isWPressed) {
+
+            if (keyboardIncrementalSpeed < 1)
+            {
+                keyboardIncrementalSpeed += deltaTime / 500;
+            }
             if (onGround)
             {
                 scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runAnim, 1.2, 0.03));
@@ -191,11 +222,16 @@ function setKeyboardController() {
                     particleSystem.stop();
             }
             currentAnim = runAnim;
-            frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue,1)).scale(speedMovement*deltaTime*3);
+            frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue,1)).scale(speedMovement*deltaTime*3 * keyboardIncrementalSpeed);
         }
 
         // Run Backward
         if (isSPressed) {
+
+            if (keyboardIncrementalSpeed < 1)
+            {
+                keyboardIncrementalSpeed += deltaTime / 500;
+            }
             if (onGround)
             {
                 scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runBackAnim, 1.5, 0.03));
@@ -206,7 +242,7 @@ function setKeyboardController() {
             }
             
             currentAnim = runBackAnim;
-            frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue,-1)).scale(speedMovement*deltaTime*3);
+            frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue,-1)).scale(speedMovement*deltaTime*3 * keyboardIncrementalSpeed);
         }
         // Rotate Left
         if (isAPressed) {
@@ -239,6 +275,7 @@ function setKeyboardController() {
         if (!isWPressed && !isSPressed)
         {
             particleSystem.stop();
+            keyboardIncrementalSpeed = 0;
         }
 
         if (!jumpPressed && !onGround && Math.round(velocity.y) == 0 && !falling)
@@ -295,8 +332,8 @@ function setJoystickController() {
     // Default Joysticks
     var leftJoystick = new BABYLON.VirtualJoystick(true);
     var rightJoystick = new BABYLON.VirtualJoystick(false);
-    leftJoystick.setJoystickColor("#b3dbbf40");
-    rightJoystick.setJoystickColor("#b3dbbf40");
+    leftJoystick.setJoystickColor("#b3dbbf10");
+    rightJoystick.setJoystickColor("#b3dbbf10");
     BABYLON.VirtualJoystick.Canvas.style.zIndex = "4";
    
     // Update Movement Joystick Controller
@@ -380,7 +417,6 @@ function setJoystickController() {
             falling = true;
         }
 
-        checkPlayerVelocity();
         player.moveWithCollisions(frontVector);
     });
 }
