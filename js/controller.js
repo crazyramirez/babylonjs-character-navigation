@@ -38,25 +38,16 @@ const rayHelper4 = new BABYLON.RayHelper(ray4);
 
 // Particle System
 var particleSystem;
-
 var winFocused = true;
-
 
 // Update Movement
 function updateMovement(deltaTime) {
     
+    if (!winFocused)
+        return;
+    
     // Check Player Velocity
     checkPlayerVelocity();
-
-    // Set Initial simulatedGravity
-    if (!winFocused)
-    {
-        // gravity = 0;
-        jumpValue = 0;
-        falling = false;
-        onGround = false;
-        return;
-    }
 
     // Set Gravity & JumpValue
     simulatedGravity = deltaTime / gravityMultiplier;
@@ -136,10 +127,7 @@ function updateMovement(deltaTime) {
     // console.log("jumpValue: " + jumpValue.toFixed(2));
 
     // Update Base FrontVector
-    if (!winFocused)
-        frontVector = player.getDirection(new BABYLON.Vector3(0,0,0));
-    else
-        frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/20,0));
+    frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/20,0));
 
     // Update Particle System Position
     particleSystem.emitter = new BABYLON.Vector3(player.position.x, player.position.y-0.5, player.position.z);
@@ -158,19 +146,42 @@ function checkPlayerVelocity() {
     previousTime = currentTime;
 }
 
+function resetState() { 
+    onGround = true;
+    jumpValue = 0;
+    frontVector = player.getDirection(new BABYLON.Vector3(0,0,0));
+    particleSystem.stop();
+    isWPressed = false;
+    isSPressed = false;
+    isAPressed = false;
+    isDPressed = false;
+    jumpPressed = false;
+    falling = false;
+    if (isTouch)
+    {
+        leftJoystick.speedMovement.x = 0;
+        leftJoystick.speedMovement.y = 0;
+        rightJoystick.speedMovement.x = 0;
+        rightJoystick.speedMovement.y = 0;
+    }
+}
+
 // Player Movement //
 function setPlayerMovement() {
 
-    setInterval(() => {
-        $(window).focus(function() {
-            // console.log('Focus');
+    // JQuery Check Window Focus
+    $(document).ready(function () {
+        $(window).on('focus', function () {
             winFocused = true;
+            console.log('Focus');
+            resetState();
         });
-        $(window).blur(function() {
-            // console.log('Blur');
+        $(window).on('blur', function () {
             winFocused = false;
-        }); 
-    }, 1000);
+            console.log('Blur');
+            resetState();
+        });
+    });
   
     // Create Ray Helper
     rayHelper.attachToMesh(player, new BABYLON.Vector3(-1, -0.98, 0.7), new BABYLON.Vector3(0, -0.2, 0.2), 0.35);
@@ -202,8 +213,7 @@ var keyboardIncrementalSpeed = 0;
 function setKeyboardController() {
     // Update Movement Keyboard Controller
     scene.registerBeforeRender(()=>{
-        if (!winFocused)
-        return;
+        
         // Engine DeltaTime
         var deltaTime = engine.getDeltaTime();
 
@@ -293,6 +303,7 @@ function setKeyboardController() {
 
 // Keyboard Actions KeyDown//
 document.addEventListener("keydown", function (event) {
+
     if (event.key == 'w' || event.key == 'W' || event.key == "ArrowUp") {
         isWPressed = true;
     }
@@ -312,6 +323,7 @@ document.addEventListener("keydown", function (event) {
 
 // Keyboard Actions KeyUp//
 document.addEventListener("keyup", function (event) {
+
     if (event.key == 'w' || event.key == 'W' || event.key == "ArrowUp") {
         isWPressed = false;
     }
@@ -341,8 +353,7 @@ function setJoystickController() {
    
     // Update Movement Joystick Controller
     scene.registerBeforeRender(()=>{
-        if (!winFocused)
-        return;
+        
         // Engine DeltaTime
         var deltaTime = engine.getDeltaTime();
 

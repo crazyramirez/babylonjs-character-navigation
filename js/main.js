@@ -45,6 +45,7 @@ function startGame() {
         scene.render();
     }
     engine.runRenderLoop(toRender);
+    engine.renderEvenInBackground = false;
 
     // Default Camera
     scene.createDefaultCamera();
