@@ -53,7 +53,7 @@ function startGame() {
     // Directional Light
     dirLight.intensity = 2.2;
     dirLight.position = new BABYLON.Vector3(0,10,10);
-    dirLight.direction = new BABYLON.Vector3(-4, -4, -5);
+    dirLight.direction = new BABYLON.Vector3(-4, -4, 5);
     dirLight.shadowMinZ = -100;
     dirLight.shadowMaxZ = 100;
 
@@ -72,9 +72,6 @@ function startGame() {
     groundMaterial.bumpTexture.uScale = 20;
     groundMaterial.bumpTexture.vScale = 20;
     groundMaterial.bumpTexture.intensity = 2;
-    groundMaterial.height = new BABYLON.Texture("./resources/textures/ground_height.jpg", scene);
-    groundMaterial.height.uScale = 20;
-    groundMaterial.height.vScale = 20;
     groundMaterial.roughness = 0.7;
     groundMaterial.metallic = 0;
 
@@ -134,8 +131,44 @@ function startGame() {
 //     loadedGUI.
 // }
 
+async function load3DText() {  
+
+    var fontData = await (await fetch("https://assets.babylonjs.com/fonts/Kenney Future Regular.json")).json();
+    var myText = BABYLON.MeshBuilder.CreateText("myText", "Character Navigation", fontData, {
+        size: 0.3,
+        resolution: 32, 
+        depth: 0.15
+    });
+
+    myText.position = new BABYLON.Vector3(0,2,2);
+
+    var textMaterial = new BABYLON.PBRMaterial("textMaterial", scene);
+    textMaterial.albedoTexture = new BABYLON.Texture("./resources/textures/metal.jpg", scene);
+    textMaterial.albedoTexture.uScale = 1.1;
+    textMaterial.albedoTexture.vScale = 1.1;
+    textMaterial.roughness = 0.1;
+    textMaterial.metallic = 1;
+    myText.material = textMaterial;
+    
+    shadowGenerator.addShadowCaster(myText);
+    textMaterial.reflectionTexture = hdrTexture;
+    textMaterial.reflectionTexture.level = 0.6;
+    textMaterial.environmentIntensity = 0.7;
+    textMaterial.disableLighting = false;
+
+    var alpha = 0;
+    scene.registerBeforeRender(()=>{
+        alpha += 0.01;
+        myText.position.y = 0.8*Math.cos(alpha)+2.6;
+    });
+}
+
 // Demo Objects
 function demoObjects() {
+
+    // 3D Text Demo
+
+    load3DText();
     
     // Spheres
     var sphere1 = BABYLON.MeshBuilder.CreateSphere("sphere1", {diameter: 0.5}, scene);
