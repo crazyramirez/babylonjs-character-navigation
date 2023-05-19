@@ -332,8 +332,8 @@ function setJoystickController() {
     // Default Joysticks
     var leftJoystick = new BABYLON.VirtualJoystick(true);
     var rightJoystick = new BABYLON.VirtualJoystick(false);
-    leftJoystick.setJoystickColor("#b3dbbf10");
-    rightJoystick.setJoystickColor("#b3dbbf10");
+    leftJoystick.setJoystickColor("#b3dbbf30");
+    rightJoystick.setJoystickColor("#b3dbbf30");
     BABYLON.VirtualJoystick.Canvas.style.zIndex = "4";
    
     // Update Movement Joystick Controller
