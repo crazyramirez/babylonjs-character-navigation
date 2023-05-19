@@ -71,18 +71,6 @@ html, body {
     user-select: none; /* Standard syntax */
 }
 
-#navbar {
-    z-index: 199;
-    padding: 20px !important; 
-    /* background-color: rgba(255, 255, 255, 0.25) !important; */
-}
-
-.navbar-toggler-icon {
-    font-size: 1rem;
-    width: 1.2em;
-    height: 1.2em;
-}
-
 #loadingText {
     position: absolute;
     color: white;

@@ -43,26 +43,22 @@ function updateMovement(deltaTime) {
 
     // Set Initial Gravity
     // gravity = deltaTime / gravityMultiplier;
-
     if (!winFocused)
     {
+        
+        gravity = 0;
+        jumpValue = 0;
+        falling = false;
+        onGround = false;
         return;
     }
 
+    // Set Gravity & JumpValue
     gravity = deltaTime / gravityMultiplier;
     jumpValue -= deltaTime * gravity;
-    
 
     // RayCast Pick from Player
     onScalable = false; 
-    var pick2 = scene.pickWithRay(ray2);
-    if (pick2.hit){
-       onGround = true;
-       if (pick2.pickedMesh.meshType && pick2.pickedMesh.meshType == "scalable")
-       {
-            onScalable = true;
-       }
-    } 
     var pick = scene.pickWithRay(ray);
     if (pick.hit){
        onGround = true;
@@ -71,8 +67,16 @@ function updateMovement(deltaTime) {
             onScalable = true;
        }
     } 
+    var pick2 = scene.pickWithRay(ray2);
+    if (pick2.hit){
+       onGround = true;
+       if (pick2.pickedMesh.meshType && pick2.pickedMesh.meshType == "scalable")
+       {
+            onScalable = true;
+       }
+    } 
 
-    if (onScalable && winFocused) {
+    if (onScalable) {
         jumpValue = deltaTime * gravity * 0.002;
     }
     // console.log("jumpValue:" + deltaTime * jumpMultiplier);
@@ -88,9 +92,9 @@ function updateMovement(deltaTime) {
     } 
 
     // Bounce Player
-    if (onGround && falling && winFocused)
+    if (onGround && falling)
     {
-        jumpValue = deltaTime * jumpMultiplier*0.4;
+        jumpValue = deltaTime * jumpMultiplier*0.35;
     }
 
     // Check OnGround
@@ -102,12 +106,12 @@ function updateMovement(deltaTime) {
         falling = false;
     }
 
-    if (jumpValue > deltaTime * jumpMultiplier && winFocused)
+    if (jumpValue > deltaTime * jumpMultiplier)
         jumpValue = deltaTime * jumpMultiplier;
-
 
     // Update Base FrontVector
     frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/20,0));
+    
     if (!winFocused)
         frontVector = player.getDirection(new BABYLON.Vector3(0,0,0));
 
@@ -117,7 +121,6 @@ function updateMovement(deltaTime) {
 
 // Check Player Velocity Based on Position over time
 function checkPlayerVelocity() {
-    
     var currentTime = performance.now();
     var timeCheck = (currentTime - previousTime) / 1000;
     // Calculate velocity
@@ -182,8 +185,6 @@ function setKeyboardController() {
         if (isWPressed) {
             if (onGround)
             {
-                // console.log("Velocity " + velocity.y);
-                // jumpValue -= gravity * deltaTime;
                 scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runAnim, 1.2, 0.03));
                 if (velocity.z != 0 && velocity.y > 0)
                     particleSystem.start();
@@ -198,7 +199,6 @@ function setKeyboardController() {
         if (isSPressed) {
             if (onGround)
             {
-                // jumpValue -= gravity * deltaTime;
                 scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runBackAnim, 1.5, 0.03));
                 if (velocity.z != 0 && velocity.y > 0)
                     particleSystem.start();
@@ -257,16 +257,16 @@ document.addEventListener("keydown", function (event) {
     if (event.key == 'w' || event.key == 'W' || event.key == "ArrowUp") {
         isWPressed = true;
     }
-    if (event.key == 's' || event.key == 'S' || event.key == "ArrowDown") {
+    else if (event.key == 's' || event.key == 'S' || event.key == "ArrowDown") {
         isSPressed = true;
     }
-    if (event.key == 'a' || event.key == 'A' || event.key == "ArrowLeft") {
+    else if (event.key == 'a' || event.key == 'A' || event.key == "ArrowLeft") {
         isAPressed = true;
     }
-    if (event.key == 'd' || event.key == 'D' || event.key == "ArrowRight") {
+    else if (event.key == 'd' || event.key == 'D' || event.key == "ArrowRight") {
         isDPressed = true;
     }
-    if (event.code == 'Space') {
+    else if (event.code == 'Space') {
         jumpPressed = true;
     }
 });
@@ -276,16 +276,16 @@ document.addEventListener("keyup", function (event) {
     if (event.key == 'w' || event.key == 'W' || event.key == "ArrowUp") {
         isWPressed = false;
     }
-    if (event.key == 's' || event.key == 'S' || event.key == "ArrowDown") {
+    else if (event.key == 's' || event.key == 'S' || event.key == "ArrowDown") {
         isSPressed = false;
     }
-    if (event.key == 'a' || event.key == 'A' || event.key == "ArrowLeft") {
+    else if (event.key == 'a' || event.key == 'A' || event.key == "ArrowLeft") {
         isAPressed = false;
     }
-    if (event.key == 'd' || event.key == 'D' || event.key == "ArrowRight") {
+    else if (event.key == 'd' || event.key == 'D' || event.key == "ArrowRight") {
         isDPressed = false;
     }
-    if (event.code == 'Space') {
+    else if (event.code == 'Space') {
         jumpPressed = false;
     }
 });
@@ -363,9 +363,7 @@ function setJoystickController() {
                 currentAnim = walkAnim;
                 scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, walkAnim, 1.0, 0.03));
             }
-        } else {
-            // rightJoystick.deltaPosition.x = 0;
-        }
+        } 
 
         // Check Idle Animation
         if (!leftJoystick.pressed && !rightJoystick.pressed) {
@@ -381,7 +379,6 @@ function setJoystickController() {
         if (!jumpPressed && !onGround && Math.round(velocity.y) == 0 && !falling)
         {
             falling = true;
-            // console.log("Falling");
         }
 
         checkPlayerVelocity();
@@ -396,7 +393,7 @@ function jumpFromBT() {
         jumpPressed = true;
     setTimeout(() => {
         jumpPressed = false;
-    }, 200);
+    }, 100);
 }
 
 // Animation Blending //

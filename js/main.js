@@ -67,11 +67,11 @@ function startGame() {
     // Ground
     var groundMaterial = new BABYLON.PBRMaterial("groundMaterial", scene);
     groundMaterial.albedoTexture = new BABYLON.Texture("./resources/textures/ground.jpg", scene);
-    groundMaterial.albedoTexture.uScale = 20;
-    groundMaterial.albedoTexture.vScale = 20;
+    groundMaterial.albedoTexture.uScale = 40;
+    groundMaterial.albedoTexture.vScale = 40;
     groundMaterial.bumpTexture = new BABYLON.Texture("./resources/textures/ground_normal.jpg", scene);
-    groundMaterial.bumpTexture.uScale = 20;
-    groundMaterial.bumpTexture.vScale = 20;
+    groundMaterial.bumpTexture.uScale = 40;
+    groundMaterial.bumpTexture.vScale = 40;
     groundMaterial.bumpTexture.intensity = 2;
     groundMaterial.roughness = 0.7;
     groundMaterial.metallic = 0;
@@ -86,11 +86,14 @@ function startGame() {
     // const ground2 = BABYLON.MeshBuilder.CreateGroundFromHeightMap("ground", "./resources/textures/heightMap2.png", {
     //     width: 200, height: 200, subdivisions: 100, maxHeight: 2, minHeight: -2
     // });
-    // ground2.position.y = -3;
+    // ground2.position.y = -5;
     // ground2.checkCollisions = true;
     // ground2.isPickable = true;
     // ground2.material = groundMaterial;
+    // ground2.meshType = "scalable";
     // groundMaterial.wireframe = true;
+
+    
 
     // Basic PBR Material
     basicMaterial = new BABYLON.PBRMaterial("groundMaterial", scene);
@@ -278,7 +281,7 @@ function demoObjects() {
     mergeStairs.checkCollisions = true;
     mergeStairs.isPickable = true;
     mergeStairs.position.x = 4;
-    mergeStairs.position.y = 0;
+    mergeStairs.position.y = -0.2;
     mergeStairs.position.z = 10;
     mergeStairs.receiveShadows = true;
     mergeStairs.meshType = "scalable";
@@ -288,7 +291,7 @@ function demoObjects() {
     mergeStairs2.checkCollisions = true;
     mergeStairs2.isPickable = true;
     mergeStairs2.position.x = -1;
-    mergeStairs2.position.y = 0;
+    mergeStairs2.position.y = -0.2;
     mergeStairs2.position.z = 16;   
     mergeStairs2.receiveShadows = true;
     mergeStairs2.meshType = "scalable";
@@ -352,7 +355,7 @@ function importModelAsync(model) {
             player.checkCollisions = true;
             player.addChild(result.meshes[0]);
 
-            // player.position = new BABYLON.Vector3(5,0.5,5);
+            // player.position = new BABYLON.Vector3(5,1,5);
 
             scene.getMaterialByName("Metal").roughness = 0.6;
 
@@ -383,11 +386,10 @@ function importModelAsync(model) {
             optimizeScene();
 
             setTimeout(() => {
-                hideLoadingView();              
+                hideLoadingView(); 
+                // Set Player Controller -- controller.js
+                setPlayerMovement();
             }, 1000);
-
-            // Set Player Controller -- controller.js
-            setPlayerMovement();
         });
 }
 
