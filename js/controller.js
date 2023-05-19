@@ -171,13 +171,13 @@ function setPlayerMovement() {
   
     // Create Ray Helper
     rayHelper.attachToMesh(player, new BABYLON.Vector3(-1, -0.98, 0.7), new BABYLON.Vector3(0, -0.2, 0.2), 0.35);
-    rayHelper.show(scene, new BABYLON.Color3(1, 0, 0));
+    // rayHelper.show(scene, new BABYLON.Color3(1, 0, 0));
     rayHelper2.attachToMesh(player, new BABYLON.Vector3(-1, -0.98, -0.7), new BABYLON.Vector3(0, -0.2, -0.2), 0.35);
-    rayHelper2.show(scene, new BABYLON.Color3(1, 0, 0));
+    // rayHelper2.show(scene, new BABYLON.Color3(1, 0, 0));
     rayHelper3.attachToMesh(player, new BABYLON.Vector3(1, -0.98, 0.7), new BABYLON.Vector3(0, -0.2, 0.2), 0.35);
-    rayHelper3.show(scene, new BABYLON.Color3(0, 1, 0));
+    // rayHelper3.show(scene, new BABYLON.Color3(0, 1, 0));
     rayHelper4.attachToMesh(player, new BABYLON.Vector3(1, -0.98, -0.7), new BABYLON.Vector3(0, -0.2, -0.2), 0.35);
-    rayHelper4.show(scene, new BABYLON.Color3(0, 1, 0));
+    // rayHelper4.show(scene, new BABYLON.Color3(0, 1, 0));
 
     // Position & Time for Velocity 
     previousPosition = player.position.clone();
