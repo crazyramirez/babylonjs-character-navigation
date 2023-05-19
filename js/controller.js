@@ -77,7 +77,7 @@ function updateMovement(deltaTime) {
     }
     // console.log("jumpValue:" + deltaTime * jumpMultiplier);
 
-    if (jumpValue > deltaTime * jumpMultiplier &&  && winFocused)
+    if (jumpValue > deltaTime * jumpMultiplier && winFocused)
         jumpValue = deltaTime * jumpMultiplier;
 
     // Jump Action
@@ -91,7 +91,7 @@ function updateMovement(deltaTime) {
     } 
 
     // Bounce Player
-    if (onGround && falling &&  && winFocused)
+    if (onGround && falling && winFocused)
     {
         jumpValue = deltaTime * jumpMultiplier*0.4;
     }
