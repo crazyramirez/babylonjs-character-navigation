@@ -35,12 +35,11 @@ const rayHelper2 = new BABYLON.RayHelper(ray2);
 // Particle System
 var particleSystem;
 
-var winFocused = false;
+var winFocused = true;
 
 
 // Update Movement
 function updateMovement(deltaTime) {
-
 
     // Set Initial Gravity
     // gravity = deltaTime / gravityMultiplier;
@@ -66,7 +65,7 @@ function updateMovement(deltaTime) {
        }
     } 
 
-    if (onScalable) {
+    if (onScalable && winFocused) {
         jumpValue = deltaTime * gravity * 0.002;
     }
     // console.log("jumpValue:" + deltaTime * jumpMultiplier);
@@ -111,17 +110,17 @@ function checkPlayerVelocity() {
 // Player Movement //
 function setPlayerMovement() {
 
-    // setInterval(() => {
-    //     $(window).focus(function() {
-    //         console.log('Focus');
-    //         winFocused = true;
-    //     });
+    setInterval(() => {
+        $(window).focus(function() {
+            console.log('Focus');
+            winFocused = true;
+        });
     
-    //     $(window).blur(function() {
-    //         console.log('Blur');
-    //         winFocused = false;
-    //     }); 
-    // }, 500);
+        $(window).blur(function() {
+            console.log('Blur');
+            winFocused = false;
+        }); 
+    }, 500);
   
     // Create Ray Helper
     rayHelper.attachToMesh(player, new BABYLON.Vector3(0, -0.98, 0.7), new BABYLON.Vector3(0, -0.2, 0.2), 0.35);
@@ -153,8 +152,8 @@ function setKeyboardController() {
         var deltaTime = engine.getDeltaTime();
 
         // Update Player Movement
-        updateMovement(deltaTime);
         checkPlayerVelocity();
+        updateMovement(deltaTime);
 
         // Run Forward
         if (isWPressed) {
