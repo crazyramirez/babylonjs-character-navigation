@@ -45,8 +45,7 @@ function updateMovement(deltaTime) {
     // gravity = deltaTime / gravityMultiplier;
     if (!winFocused)
     {
-        
-        gravity = 0;
+        // gravity = 0;
         jumpValue = 0;
         falling = false;
         onGround = false;
