@@ -46,8 +46,6 @@ function updateMovement(deltaTime) {
 
     if (!winFocused)
     {
-        gravity = 0;
-        jumpValue = 0;
         return;
     }
 
