@@ -19,6 +19,7 @@ var gravityMultiplier = 2000;
 var jumpMultiplier = 0.28;
 var onGround = false;
 var onScalable = false;
+
 // Check Velocity Y Position for Falling Action
 var previousPosition;
 var previousTime;
@@ -42,6 +43,10 @@ function updateMovement(deltaTime) {
 
     // Set Initial Gravity
     // gravity = deltaTime / gravityMultiplier;
+
+    if (!winFocused)
+    return;
+
     gravity = deltaTime / gravityMultiplier;
     jumpValue -= deltaTime * gravity;
     
@@ -65,7 +70,7 @@ function updateMovement(deltaTime) {
        }
     } 
 
-    if (onScalable && winFocused) {
+    if (onScalable) {
         jumpValue = deltaTime * gravity * 0.002;
     }
     // console.log("jumpValue:" + deltaTime * jumpMultiplier);
@@ -74,7 +79,7 @@ function updateMovement(deltaTime) {
         jumpValue = deltaTime * jumpMultiplier;
 
     // Jump Action
-    if (jumpPressed && onGround && winFocused)
+    if (jumpPressed && onGround)
     {
         bounceEnabled = true;
         onGround = false;
@@ -84,7 +89,7 @@ function updateMovement(deltaTime) {
     } 
 
     // Bounce Player
-    if (onGround && falling && winFocused)
+    if (onGround && falling)
     {
         jumpValue = deltaTime * jumpMultiplier*0.4;
     }
@@ -107,6 +112,7 @@ function updateMovement(deltaTime) {
 
 // Check Player Velocity Based on Position over time
 function checkPlayerVelocity() {
+    
     var currentTime = performance.now();
     var timeCheck = (currentTime - previousTime) / 1000;
     // Calculate velocity
@@ -158,7 +164,8 @@ function setPlayerMovement() {
 function setKeyboardController() {
     // Update Movement Keyboard Controller
     scene.registerBeforeRender(()=>{
-
+        if (!winFocused)
+        return;
         // Engine DeltaTime
         var deltaTime = engine.getDeltaTime();
 
@@ -290,7 +297,8 @@ function setJoystickController() {
    
     // Update Movement Joystick Controller
     scene.registerBeforeRender(()=>{
-
+        if (!winFocused)
+        return;
         // Engine DeltaTime
         var deltaTime = engine.getDeltaTime();
 
