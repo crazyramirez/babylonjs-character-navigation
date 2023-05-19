@@ -70,12 +70,12 @@ function updateMovement(deltaTime) {
        }
     } 
 
-    if (onScalable) {
+    if (onScalable && winFocused) {
         jumpValue = deltaTime * gravity * 0.002;
     }
     // console.log("jumpValue:" + deltaTime * jumpMultiplier);
 
-    if (jumpValue > deltaTime * jumpMultiplier)
+    if (jumpValue > deltaTime * jumpMultiplier &&  && winFocused)
         jumpValue = deltaTime * jumpMultiplier;
 
     // Jump Action
@@ -89,7 +89,7 @@ function updateMovement(deltaTime) {
     } 
 
     // Bounce Player
-    if (onGround && falling)
+    if (onGround && falling &&  && winFocused)
     {
         jumpValue = deltaTime * jumpMultiplier*0.4;
     }
@@ -105,7 +105,9 @@ function updateMovement(deltaTime) {
 
     // Update Base FrontVector
     frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/20,0));
-    
+    if (!winFocused)
+    frontVector = player.getDirection(new BABYLON.Vector3(0,0,0));
+
     // Update Particle System Position
     particleSystem.emitter = new BABYLON.Vector3(player.position.x, player.position.y-0.5, player.position.z);
 }
