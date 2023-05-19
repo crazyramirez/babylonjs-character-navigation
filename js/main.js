@@ -54,15 +54,15 @@ function startGame() {
     dirLight.intensity = 3.2;
     dirLight.position = new BABYLON.Vector3(0,10,10);
     dirLight.direction = new BABYLON.Vector3(-4, -4, 1);
-    dirLight.shadowMinZ = -2.5;
-    dirLight.shadowMaxZ = 11.6;
+    dirLight.shadowMinZ = -10;
+    dirLight.shadowMaxZ = 20;
     dirLight.diffuse = new BABYLON.Color3.FromInts(234, 170, 133);
 
     // Shadow Generator
     shadowGenerator.darkness = 0.25;
-    shadowGenerator.bias = 0.05;
+    shadowGenerator.bias = 0.02;
     shadowGenerator.usePercentageCloserFiltering = true;
-    shadowGenerator.filteringQuality = 0;
+    shadowGenerator.filteringQuality = 1;
 
     // Ground
     var groundMaterial = new BABYLON.PBRMaterial("groundMaterial", scene);
