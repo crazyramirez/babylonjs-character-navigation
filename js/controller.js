@@ -45,7 +45,11 @@ function updateMovement(deltaTime) {
     // gravity = deltaTime / gravityMultiplier;
 
     if (!winFocused)
-    return;
+    {
+        gravity = 0;
+        jumpValue = 0;
+        return;
+    }
 
     gravity = deltaTime / gravityMultiplier;
     jumpValue -= deltaTime * gravity;
