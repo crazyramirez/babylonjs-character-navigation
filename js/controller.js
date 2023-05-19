@@ -166,12 +166,11 @@ function setPlayerMovement() {
             // console.log('Focus');
             winFocused = true;
         });
-    
         $(window).blur(function() {
             // console.log('Blur');
             winFocused = false;
         }); 
-    }, 500);
+    }, 1000);
   
     // Create Ray Helper
     rayHelper.attachToMesh(player, new BABYLON.Vector3(-1, -0.98, 0.7), new BABYLON.Vector3(0, -0.2, 0.2), 0.35);
