@@ -44,6 +44,7 @@ function updateMovement(deltaTime) {
     // gravity = deltaTime / gravityMultiplier;
     gravity = deltaTime / gravityMultiplier;
     jumpValue -= deltaTime * gravity;
+    
 
     // RayCast Pick from Player
     onScalable = false; 
@@ -73,7 +74,7 @@ function updateMovement(deltaTime) {
         jumpValue = deltaTime * jumpMultiplier;
 
     // Jump Action
-    if (jumpPressed && onGround)
+    if (jumpPressed && onGround && winFocused)
     {
         bounceEnabled = true;
         onGround = false;
