@@ -13,6 +13,10 @@ var doubleJump;
 var speedMovement = 0.002;
 var joystickSpeedMovement = 0.0055;
 
+// Joysticks
+var leftJoystick;
+var rightJoystick;
+
 // Simulated Gravity
 var simulatedGravity;    
 var gravityMultiplier = 2000;
@@ -149,28 +153,29 @@ function checkPlayerVelocity() {
 function resetState() { 
     onGround = true;
     jumpValue = 0;
-    frontVector = player.getDirection(new BABYLON.Vector3(0,0,0));
-    particleSystem.stop();
+    falling = false;
     isWPressed = false;
     isSPressed = false;
     isAPressed = false;
     isDPressed = false;
     jumpPressed = false;
-    falling = false;
-    if (isTouch)
+    if (isTouch && leftJoystick)
     {
-        leftJoystick.speedMovement.x = 0;
-        leftJoystick.speedMovement.y = 0;
-        rightJoystick.speedMovement.x = 0;
-        rightJoystick.speedMovement.y = 0;
+        leftJoystick.deltaPosition.x = 0;
+        leftJoystick.deltaPosition.y = 0;
+        rightJoystick.deltaPosition.x = 0;
+        rightJoystick.deltaPosition.y = 0;
+        leftJoystick.clearPosition();
+        rightJoystick.clearPosition();
     }
+    frontVector = player.getDirection(new BABYLON.Vector3(0,0,0));
+    particleSystem.stop();
 }
 
 // Player Movement //
 function setPlayerMovement() {
-
-    // JQuery Check Window Focus
-    $(document).ready(function () {
+   // JQuery Check Window Focus
+   $(document).ready(function () {
         $(window).on('focus', function () {
             winFocused = true;
             console.log('Focus');
@@ -182,7 +187,7 @@ function setPlayerMovement() {
             resetState();
         });
     });
-  
+    
     // Create Ray Helper
     rayHelper.attachToMesh(player, new BABYLON.Vector3(-1, -0.98, 0.7), new BABYLON.Vector3(0, -0.2, 0.2), 0.35);
     // rayHelper.show(scene, new BABYLON.Color3(1, 0, 0));
@@ -345,10 +350,12 @@ document.addEventListener("keyup", function (event) {
 function setJoystickController() {
 
     // Default Joysticks
-    var leftJoystick = new BABYLON.VirtualJoystick(true);
-    var rightJoystick = new BABYLON.VirtualJoystick(false);
+    leftJoystick = new BABYLON.VirtualJoystick(true);
+    rightJoystick = new BABYLON.VirtualJoystick(false);
     leftJoystick.setJoystickColor("#b3dbbf30");
     rightJoystick.setJoystickColor("#b3dbbf30");
+    leftJoystick.clearPosition();
+    rightJoystick.clearPosition();
     BABYLON.VirtualJoystick.Canvas.style.zIndex = "4";
    
     // Update Movement Joystick Controller
