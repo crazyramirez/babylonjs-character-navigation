@@ -168,7 +168,7 @@ function demoObjects() {
 
     // 3D Text Demo
 
-    load3DText();
+    // load3DText();
     
     // Spheres
     var sphere1 = BABYLON.MeshBuilder.CreateSphere("sphere1", {diameter: 0.5}, scene);
