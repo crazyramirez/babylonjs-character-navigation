@@ -9,6 +9,9 @@ var frontVector;
 var rotationAxis;
 var doubleJump;
 
+// Delta Time
+var deltaTime;
+
 // Speed Movement
 var speedMovement = 0.002;
 var joystickSpeedMovement = 0.0055;
@@ -45,11 +48,18 @@ var particleSystem;
 var winFocused = true;
 
 // Update Movement
-function updateMovement(deltaTime) {
+function updateMovement() {
     
     if (!winFocused)
+    {
+        deltaTime = 0;
         return;
+    }
     
+    console.log("jumpValue:" + jumpValue);
+    console.log("jumpValue:" + simulatedGravity);
+
+
     // Check Player Velocity
     checkPlayerVelocity();
 
@@ -152,8 +162,9 @@ function checkPlayerVelocity() {
 
 function resetState() { 
     onGround = true;
-    jumpValue = 0;
     falling = false;
+    jumpValue = 0;
+    simulatedGravity = 0;
     isWPressed = false;
     isSPressed = false;
     isAPressed = false;
@@ -172,21 +183,28 @@ function resetState() {
     particleSystem.stop();
 }
 
-// Player Movement //
-function setPlayerMovement() {
+// Check Focus Windos
+function checkFocusWindow() {  
    // JQuery Check Window Focus
    $(document).ready(function () {
-        $(window).on('focus', function () {
-            winFocused = true;
-            console.log('Focus');
-            resetState();
-        });
-        $(window).on('blur', function () {
-            winFocused = false;
-            console.log('Blur');
-            resetState();
-        });
+    $(window).on('focus', function () {
+        winFocused = true;
+        console.log('Focus');
+        resetState();
     });
+    $(window).on('blur', function () {
+        winFocused = false;
+        console.log('Blur');
+        resetState();
+    });
+});
+}
+
+// Player Movement //
+function setPlayerMovement() {
+
+    // Check Focus Windos
+    checkFocusWindow();
     
     // Create Ray Helper
     rayHelper.attachToMesh(player, new BABYLON.Vector3(-1, -0.98, 0.7), new BABYLON.Vector3(0, -0.2, 0.2), 0.35);
@@ -220,9 +238,9 @@ function setKeyboardController() {
     scene.registerBeforeRender(()=>{
         
         // Engine DeltaTime
-        var deltaTime = engine.getDeltaTime();
+        deltaTime = engine.getDeltaTime();
 
-        updateMovement(deltaTime);
+        updateMovement();
 
         // Run Forward
         if (isWPressed) {
@@ -360,12 +378,12 @@ function setJoystickController() {
    
     // Update Movement Joystick Controller
     scene.registerBeforeRender(()=>{
-        
+
         // Engine DeltaTime
-        var deltaTime = engine.getDeltaTime();
+        deltaTime = engine.getDeltaTime();
 
         // Update Player Movement
-        updateMovement(deltaTime);
+        updateMovement();
 
         // Move Forward or Backward
         if (leftJoystick.pressed && leftJoystick.deltaPosition.y != 0) {
