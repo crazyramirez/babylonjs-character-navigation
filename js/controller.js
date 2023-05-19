@@ -55,10 +55,6 @@ function updateMovement() {
         deltaTime = 0;
         return;
     }
-    
-    console.log("jumpValue:" + jumpValue);
-    console.log("jumpValue:" + simulatedGravity);
-
 
     // Check Player Velocity
     checkPlayerVelocity();
@@ -163,6 +159,7 @@ function checkPlayerVelocity() {
 function resetState() { 
     onGround = true;
     falling = false;
+    deltaTime = 0;
     jumpValue = 0;
     simulatedGravity = 0;
     isWPressed = false;
