@@ -121,8 +121,8 @@ function startGame() {
         });
     });
 
-    scene.debugLayer.show({embedMode: true}).then(function () {
-    });
+    // scene.debugLayer.show({embedMode: true}).then(function () {
+    // });
 }
 
 
