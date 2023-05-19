@@ -83,7 +83,7 @@ function updateMovement(deltaTime) {
     } 
 
     // Bounce Player
-    if (onGround && falling)
+    if (onGround && falling && winFocused)
     {
         jumpValue = deltaTime * jumpMultiplier*0.4;
     }
