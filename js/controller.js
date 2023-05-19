@@ -77,9 +77,6 @@ function updateMovement(deltaTime) {
     }
     // console.log("jumpValue:" + deltaTime * jumpMultiplier);
 
-    if (jumpValue > deltaTime * jumpMultiplier && winFocused)
-        jumpValue = deltaTime * jumpMultiplier;
-
     // Jump Action
     if (jumpPressed && onGround)
     {
@@ -105,10 +102,14 @@ function updateMovement(deltaTime) {
         falling = false;
     }
 
+    if (jumpValue > deltaTime * jumpMultiplier && winFocused)
+        jumpValue = deltaTime * jumpMultiplier;
+
+
     // Update Base FrontVector
     frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/20,0));
     if (!winFocused)
-    frontVector = player.getDirection(new BABYLON.Vector3(0,0,0));
+        frontVector = player.getDirection(new BABYLON.Vector3(0,0,0));
 
     // Update Particle System Position
     particleSystem.emitter = new BABYLON.Vector3(player.position.x, player.position.y-0.5, player.position.z);
