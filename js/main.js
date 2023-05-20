@@ -80,21 +80,22 @@ function startGame() {
     groundMaterial.roughness = 0.7;
     groundMaterial.metallic = 0;
 
-    ground = BABYLON.MeshBuilder.CreateCylinder("ground", {diameter: 70, height: 0.2, tessellation: 80}, scene);
-    ground.position.y = -0.1;
-    ground.material = groundMaterial;
-    ground.checkCollisions = true;
-    ground.isPickable = true;
-    ground.receiveShadows = true;
+    // ground = BABYLON.MeshBuilder.CreateCylinder("ground", {diameter: 70, height: 0.2, tessellation: 80}, scene);
+    // ground.position.y = -0.1;
+    // ground.material = groundMaterial;
+    // ground.checkCollisions = true;
+    // ground.isPickable = true;
+    // ground.receiveShadows = true;
 
-    // const ground2 = BABYLON.MeshBuilder.CreateGroundFromHeightMap("ground", "./resources/textures/heightMap2.png", {
-    //     width: 200, height: 200, subdivisions: 100, maxHeight: 2, minHeight: -2
-    // });
-    // ground2.position.y = -5;
-    // ground2.checkCollisions = true;
-    // ground2.isPickable = true;
-    // ground2.material = groundMaterial;
-    // ground2.meshType = "scalable";
+    const ground2 = BABYLON.MeshBuilder.CreateGroundFromHeightMap("ground", "./resources/textures/heightMap2.png", {
+        width: 150, height: 150, subdivisions: 20, maxHeight: 2, minHeight: -2
+    });
+    ground2.position.y = -1;
+    ground2.checkCollisions = true;
+    ground2.isPickable = true;
+    ground2.material = groundMaterial;
+    ground2.meshType = "scalable";
+    ground2.receiveShadows = true;
     // groundMaterial.wireframe = true;
 
 
@@ -172,20 +173,6 @@ function demoObjects() {
 
     // load3DText();
     
-    // Boxes
-    const box1 = BABYLON.MeshBuilder.CreateBox("box1", {
-        size: 3,
-        width: 3,
-        height: 1
-    }, scene);
-    box1.material = basicMaterial;
-    box1.position.y = 0.5;
-    box1.position.x = 4;
-    box1.position.z = 0;
-    box1.checkCollisions = true;
-    box1.isPickable = true;
-    box1.receiveShadows = true;
-    box1.meshType = "scalable";
 
     const box2 = BABYLON.MeshBuilder.CreateBox("box2", {
         size: 5,
@@ -194,7 +181,7 @@ function demoObjects() {
     }, scene);
     box2.material = basicMaterial;
     box2.position.x = -7;
-    box2.position.y = 2;
+    box2.position.y = 0;
     box2.position.z = -2;
     box2.checkCollisions = true;
     box2.isPickable = true;
@@ -204,11 +191,11 @@ function demoObjects() {
     const box3 = BABYLON.MeshBuilder.CreateBox("box3", {
         size: 3,
         width: 3,
-        height: 1
+        height: 0.4
     }, scene);
     box3.material = basicMaterial;
     box3.position.x = -3;
-    box3.position.y = 1;
+    box3.position.y = 0;
     box3.position.z = 12;
     box3.checkCollisions = true;
     box3.isPickable = true;
@@ -218,7 +205,7 @@ function demoObjects() {
     const box4 = BABYLON.MeshBuilder.CreateBox("box4", {
         size: 3,
         width: 3,
-        height: 1
+        height: 0.4
     }, scene);
     box4.material = basicMaterial;
     box4.position.y = 0.5;
@@ -231,11 +218,11 @@ function demoObjects() {
     const box5 = BABYLON.MeshBuilder.CreateBox("box5", {
         size: 4,
         width: 4,
-        height: 1
+        height: 0.4
     }, scene);
     box5.material = basicMaterial;
     box5.position.x = -5;
-    box5.position.y = 1.5;
+    box5.position.y = 0.7;
     box5.position.z = 6;
     box5.checkCollisions = true;
     box5.isPickable = true;
@@ -243,12 +230,12 @@ function demoObjects() {
     box5.meshType = "scalable";
 
     const ramp = BABYLON.MeshBuilder.CreateBox("ramp", {
-        size: 3,
+        size: 5,
         width: 6,
         height: 1
     }, scene);
     ramp.position.x = 5;
-    ramp.position.y = 0;
+    ramp.position.y = 0.5;
     ramp.position.z = -7;
     ramp.checkCollisions = true;
     ramp.isPickable = true;
@@ -262,7 +249,7 @@ function demoObjects() {
         height: 1
     }, scene);
     ramp2.position.x = 0;
-    ramp2.position.y = 0;
+    ramp2.position.y = 1;
     ramp2.position.z = -10;
     ramp2.checkCollisions = true;
     ramp2.isPickable = true;
@@ -285,7 +272,7 @@ function demoObjects() {
     mergeStairs.checkCollisions = true;
     mergeStairs.isPickable = true;
     mergeStairs.position.x = 4;
-    mergeStairs.position.y = -0.2;
+    mergeStairs.position.y = -1.5;
     mergeStairs.position.z = 10;
     mergeStairs.receiveShadows = true;
     mergeStairs.meshType = "scalable";
@@ -295,8 +282,9 @@ function demoObjects() {
     mergeStairs2.checkCollisions = true;
     mergeStairs2.isPickable = true;
     mergeStairs2.position.x = -1;
-    mergeStairs2.position.y = -0.2;
-    mergeStairs2.position.z = 16;   
+    mergeStairs2.position.y = -2;
+    mergeStairs2.position.z = 15;   
+    mergeStairs2.scaling.y = 1.5;
     mergeStairs2.receiveShadows = true;
     mergeStairs2.meshType = "scalable";
 
@@ -308,7 +296,6 @@ function demoObjects() {
     groundMaterial.metallic = 0;
     ramp.material = groundMaterial;
     ramp2.material = groundMaterial;
-    box1.material = groundMaterial;
     box2.material = groundMaterial;
     box3.material = groundMaterial;
     box4.material = groundMaterial;
@@ -323,9 +310,9 @@ function createFollowCamera(target) {
     scene.activeCamera.dispose();
     camera = new BABYLON.FollowCamera("playerFollowCamera", target.position, scene, target);
     camera.radius = 8; // how far from the object to follow
-    camera.heightOffset = 5; // how high above the object to place the camera
+    camera.heightOffset = 4; // how high above the object to place the camera
     camera.rotationOffset = 180; // the viewing angle
-    camera.cameraAcceleration = 0.01; // how fast to move
+    camera.cameraAcceleration = 0.03; // how fast to move
     camera.maxCameraSpeed = 1; // speed limit
     scene.backgroundColor = new BABYLON.Color3(0, 0, 0);
     scene.clearColor = new BABYLON.Color4(0, 0, 0, 0);
