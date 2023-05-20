@@ -102,24 +102,6 @@ function updateMovement() {
         jumpValue = deltaTime * simulatedGravity * 0.002;
     }
 
-    // Jump Action
-    if (jumpPressed && onGround)
-    {
-        bounceEnabled = true;
-        onGround = false;
-        jumpValue = deltaTime * jumpMultiplier;
-        if (onScalable)
-            jumpValue = deltaTime * jumpMultiplier*0.9;
-
-            console.log("jumpValue: " + jumpValue.toFixed(2));
-    } 
-
-    // Bounce Player
-    if (onGround && falling)
-    {
-        jumpValue = deltaTime * jumpMultiplier* 0.35;
-    }
-
     // Check OnGround
     if (!onGround)
     {
@@ -129,8 +111,30 @@ function updateMovement() {
         falling = false;
     }
 
-    if (jumpValue > deltaTime * jumpMultiplier)
+    // Jump Action
+    if (jumpPressed && onGround)
+    {
+        bounceEnabled = true;
+        onGround = false;
         jumpValue = deltaTime * jumpMultiplier;
+
+        // jumpValue = scene.getAnimationRatio()*4;
+
+        if (onScalable)
+            jumpValue = engine.getFps()/80*0.9;
+        
+            console.log("jumpValue: " + jumpValue.toFixed(2));
+    } 
+
+    // Bounce Player
+    if (onGround && falling)
+    {
+        jumpValue = engine.getFps()/80 * 0.35;
+    }
+
+
+    if (jumpValue > deltaTime * jumpMultiplier * 1.1)
+        jumpValue = deltaTime * jumpMultiplier * 1.1;
     if (jumpValue < -deltaTime/2)
         jumpValue = -deltaTime/2;
 
@@ -229,43 +233,46 @@ function setPlayerMovement() {
 var keyboardIncrementalSpeed = 0;
 // Keyboard Controller
 function setKeyboardController() {
+
     // Update Movement Keyboard Controller
 
+    // Keypress
     $(document).keypress(function (event) {
         if (event.key == 'w' || event.key == 'W' || event.key == "ArrowUp") {
             isWPressed = true;
         }
-        else if (event.key == 's' || event.key == 'S' || event.key == "ArrowDown") {
+        if (event.key == 's' || event.key == 'S' || event.key == "ArrowDown") {
             isSPressed = true;
         }
-        else if (event.key == 'a' || event.key == 'A' || event.key == "ArrowLeft") {
+        if (event.key == 'a' || event.key == 'A' || event.key == "ArrowLeft") {
             isAPressed = true;
         }
-        else if (event.key == 'd' || event.key == 'D' || event.key == "ArrowRight") {
+        if (event.key == 'd' || event.key == 'D' || event.key == "ArrowRight") {
             isDPressed = true;
         }
-        else if (event.code == 'Space') {
+        if (event.code == 'Space') {
             jumpPressed = true;
-            setTimeout(() => {
-                jumpPressed = false;
-            }, 20);
+            // setTimeout(() => {
+            //     jumpPressed = false;
+            // }, 20);
         }  
     });
 
+    // Keyup
     $(document).keyup(function (event) {
         if (event.key == 'w' || event.key == 'W' || event.key == "ArrowUp") {
             isWPressed = false;
         }
-        else if (event.key == 's' || event.key == 'S' || event.key == "ArrowDown") {
+        if (event.key == 's' || event.key == 'S' || event.key == "ArrowDown") {
             isSPressed = false;
         }
-        else if (event.key == 'a' || event.key == 'A' || event.key == "ArrowLeft") {
+        if (event.key == 'a' || event.key == 'A' || event.key == "ArrowLeft") {
             isAPressed = false;
         }
-        else if (event.key == 'd' || event.key == 'D' || event.key == "ArrowRight") {
+        if (event.key == 'd' || event.key == 'D' || event.key == "ArrowRight") {
             isDPressed = false;
         }
-        else if (event.code == 'Space') {
+        if (event.code == 'Space') {
             jumpPressed = false;
         }  
     });
@@ -323,7 +330,6 @@ function setKeyboardController() {
             
             currentAnim = runBackAnim;
             frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/jumpDivider,-speedMovement*deltaTime * keyboardIncrementalSpeed));
-            // frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue,-1)).scale(speedMovement*deltaTime * keyboardIncrementalSpeed);
         }
         // Rotate Left
         if (isAPressed) {
@@ -362,7 +368,6 @@ function setKeyboardController() {
         if (!jumpPressed && !onGround && Math.round(velocity.y) == 0 && !falling)
         {
             falling = true;
-            // console.log("Falling");
         }
 
         player.moveWithCollisions(frontVector);
@@ -411,7 +416,6 @@ function setJoystickController() {
             {
                 if (onGround)
                 {
-                    // jumpValue -= simulatedGravity * deltaTime;
                     scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runAnim, 1.5, 0.03));
                     if (velocity.z != 0 && velocity.y > 0)
                         particleSystem.start();
@@ -423,7 +427,6 @@ function setJoystickController() {
                 scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runAnim, 1.2, 0.03));
                 if (onGround)
                 {
-                    // jumpValue -= simulatedGravity * deltaTime;
                     scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runBackAnim, 1.5, 0.03));
                     if (velocity.z != 0 && velocity.y > 0)
                         particleSystem.start();
