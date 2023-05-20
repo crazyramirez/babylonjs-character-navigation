@@ -187,7 +187,7 @@ function checkFocusWindow() {
     $(window).on('focus', function () {
         winFocused = true;
         console.log('Focus');
-        resetState();
+        // resetState();
     });
     $(window).on('blur', function () {
         winFocused = false;

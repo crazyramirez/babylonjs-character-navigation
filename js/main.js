@@ -395,18 +395,18 @@ function importModelAsync(model) {
 }
 
 function optimizeScene() {
+    return;
     // Hardware Scaling
     var options = new BABYLON.SceneOptimizerOptions(60, 500);
     options.addOptimization(new BABYLON.HardwareScalingOptimization(0, 1));
-    options.targetFrameRate = 60;
     var optimizer = new BABYLON.SceneOptimizer(scene, options);
     optimizer.start();
 
-    scene.skipPointerMovePicking = true;
-    scene.autoClear = false; // Color buffer
+    // scene.skipPointerMovePicking = true;
+    // scene.autoClear = false; // Color buffer
     scene.autoClearDepthAndStencil = false; // Depth and stencil, obviously
     scene.getAnimationRatio();
-    scene.blockfreeActiveMeshesAndRenderingGroups = true;
+    // scene.blockfreeActiveMeshesAndRenderingGroups = true;
 
     // scene.performancePriority = BABYLON.ScenePerformancePriority.Intermediate;
 }
