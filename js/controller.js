@@ -23,7 +23,7 @@ var rightJoystick;
 // Simulated Gravity
 var simulatedGravity;    
 var gravityMultiplier = 2000;
-var jumpMultiplier = 0.25;
+var jumpMultiplier = 0.22;
 var onGround = false;
 var onScalable = false;
 
