@@ -13,7 +13,7 @@ var doubleJump;
 var deltaTime;
 
 // Speed Movement
-var speedMovement = 0.007;
+var speedMovement = 0.006;
 
 // Joysticks
 var leftJoystick;
