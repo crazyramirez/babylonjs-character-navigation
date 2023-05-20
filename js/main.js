@@ -37,6 +37,9 @@ function createScene(engine, canvas) {
     return scene;
 }
 
+
+
+
 // Start Game
 function startGame() {
 
@@ -94,7 +97,6 @@ function startGame() {
     // ground2.meshType = "scalable";
     // groundMaterial.wireframe = true;
 
-    
 
     // Basic PBR Material
     basicMaterial = new BABYLON.PBRMaterial("groundMaterial", scene);
@@ -125,6 +127,7 @@ function startGame() {
         });
     });
 
+  
     // scene.debugLayer.show({embedMode: true}).then(function () {
     // });
 }
@@ -395,19 +398,18 @@ function importModelAsync(model) {
 }
 
 function optimizeScene() {
-    return;
+    // return;
     // Hardware Scaling
     var options = new BABYLON.SceneOptimizerOptions(60, 500);
     options.addOptimization(new BABYLON.HardwareScalingOptimization(0, 1));
     var optimizer = new BABYLON.SceneOptimizer(scene, options);
     optimizer.start();
-
+    
     // scene.skipPointerMovePicking = true;
     // scene.autoClear = false; // Color buffer
-    scene.autoClearDepthAndStencil = false; // Depth and stencil, obviously
-    scene.getAnimationRatio();
+    // scene.autoClearDepthAndStencil = false; // Depth and stencil, obviously
+    // scene.getAnimationRatio();
     // scene.blockfreeActiveMeshesAndRenderingGroups = true;
-
     // scene.performancePriority = BABYLON.ScenePerformancePriority.Intermediate;
 }
 

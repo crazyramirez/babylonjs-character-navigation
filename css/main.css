@@ -141,27 +141,23 @@ html, body {
     }
 }
 
-#customBT {
+#customBT{
     z-index: 199;
     position: absolute;
     right: 10px;
     bottom: 10px;
     color: white;
     border-color: none;
-    font-size: small;
-    padding: 20px;
+    width: 80px;
+    height: 80px;
     -webkit-user-select: none; /* Safari */
     -ms-user-select: none; /* IE 10 and IE 11 */
     user-select: none; /* Standard syntax */
     background-color: rgba(255, 255, 255, 0);
-    border: none;
-}
-
-#customBT img {
-    width: 80px;
+    background-image: url("../resources/images/jump_icon.png");
+    background-size: 50px;
+    background-position: center;
+    background-repeat: no-repeat;
     opacity: 0.5;
-    touch-action: none;
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none; /* IE 10 and IE 11 */
-    user-select: none; /* Standard syntax */
+    border: none;
 }
