@@ -126,8 +126,8 @@ function startGame() {
             jumpFromBT();
         });
     });
-
   
+
     // scene.debugLayer.show({embedMode: true}).then(function () {
     // });
 }
@@ -402,6 +402,7 @@ function optimizeScene() {
     // Hardware Scaling
     var options = new BABYLON.SceneOptimizerOptions(60, 500);
     options.addOptimization(new BABYLON.HardwareScalingOptimization(0, 1));
+    options.targetFrameRate = 60;
     var optimizer = new BABYLON.SceneOptimizer(scene, options);
     optimizer.start();
     

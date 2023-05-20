@@ -13,7 +13,7 @@ var doubleJump;
 var deltaTime;
 
 // Speed Movement
-var speedMovement = 0.0065;
+var speedMovement = 0.007;
 
 // Joysticks
 var leftJoystick;
@@ -134,6 +134,7 @@ function updateMovement() {
     if (jumpValue < -deltaTime/2)
         jumpValue = -deltaTime/2;
 
+
     // Update Particle System Position
     particleSystem.emitter = new BABYLON.Vector3(player.position.x, player.position.y-0.5, player.position.z);
 }
@@ -229,19 +230,61 @@ var keyboardIncrementalSpeed = 0;
 // Keyboard Controller
 function setKeyboardController() {
     // Update Movement Keyboard Controller
-    scene.registerBeforeRender(()=>{
-        if (!winFocused)
-        {
-            jumpValue = 0;
-            deltaTime = 0;
-            return;
+
+    $(document).keypress(function (event) {
+        if (event.key == 'w' || event.key == 'W' || event.key == "ArrowUp") {
+            isWPressed = true;
         }
+        else if (event.key == 's' || event.key == 'S' || event.key == "ArrowDown") {
+            isSPressed = true;
+        }
+        else if (event.key == 'a' || event.key == 'A' || event.key == "ArrowLeft") {
+            isAPressed = true;
+        }
+        else if (event.key == 'd' || event.key == 'D' || event.key == "ArrowRight") {
+            isDPressed = true;
+        }
+        else if (event.code == 'Space') {
+            jumpPressed = true;
+            setTimeout(() => {
+                jumpPressed = false;
+            }, 20);
+        }  
+    });
+
+    $(document).keyup(function (event) {
+        if (event.key == 'w' || event.key == 'W' || event.key == "ArrowUp") {
+            isWPressed = false;
+        }
+        else if (event.key == 's' || event.key == 'S' || event.key == "ArrowDown") {
+            isSPressed = false;
+        }
+        else if (event.key == 'a' || event.key == 'A' || event.key == "ArrowLeft") {
+            isAPressed = false;
+        }
+        else if (event.key == 'd' || event.key == 'D' || event.key == "ArrowRight") {
+            isDPressed = false;
+        }
+        else if (event.code == 'Space') {
+            jumpPressed = false;
+        }  
+    });
+
+    scene.registerBeforeRender(()=>{
+   
         // Engine DeltaTime
         deltaTime = engine.getDeltaTime();
 
         updateMovement();
         
-        frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/jumpDivider,0));
+        if (winFocused)
+        {
+            frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/jumpDivider,0));
+        } else {
+            jumpValue = 0;
+            deltaTime = 0;
+            frontVector = player.getDirection(new BABYLON.Vector3(0,0,0));
+        }
 
         // Run Forward
         if (isWPressed) {
@@ -326,46 +369,6 @@ function setKeyboardController() {
     });
 }
 
-// Keyboard Actions KeyDown//
-document.addEventListener("keydown", function (event) {
-
-    if (event.key == 'w' || event.key == 'W' || event.key == "ArrowUp") {
-        isWPressed = true;
-    }
-    else if (event.key == 's' || event.key == 'S' || event.key == "ArrowDown") {
-        isSPressed = true;
-    }
-    else if (event.key == 'a' || event.key == 'A' || event.key == "ArrowLeft") {
-        isAPressed = true;
-    }
-    else if (event.key == 'd' || event.key == 'D' || event.key == "ArrowRight") {
-        isDPressed = true;
-    }
-    else if (event.code == 'Space') {
-        jumpPressed = true;
-    }
-});
-
-// Keyboard Actions KeyUp//
-document.addEventListener("keyup", function (event) {
-
-    if (event.key == 'w' || event.key == 'W' || event.key == "ArrowUp") {
-        isWPressed = false;
-    }
-    else if (event.key == 's' || event.key == 'S' || event.key == "ArrowDown") {
-        isSPressed = false;
-    }
-    else if (event.key == 'a' || event.key == 'A' || event.key == "ArrowLeft") {
-        isAPressed = false;
-    }
-    else if (event.key == 'd' || event.key == 'D' || event.key == "ArrowRight") {
-        isDPressed = false;
-    }
-    else if (event.code == 'Space') {
-        jumpPressed = false;
-    }
-});
-
 // Joystick Controller
 function setJoystickController() {
 
@@ -380,18 +383,21 @@ function setJoystickController() {
    
     // Update Movement Joystick Controller
     scene.registerBeforeRender(()=>{
-        if (!winFocused)
-        {
-            jumpValue = 0;
-            deltaTime = 0;
-            return;
-        }
+
         // Engine DeltaTime
         deltaTime = engine.getDeltaTime();
 
         // Update Player Movement
         updateMovement();
-        frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/jumpDivider,0));
+        
+        if (winFocused)
+        {
+            frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/jumpDivider,0));
+        } else {
+            jumpValue = 0;
+            deltaTime = 0;
+            frontVector = player.getDirection(new BABYLON.Vector3(0,0,0));
+        }
 
         // Move Forward or Backward
         if (leftJoystick.pressed && leftJoystick.deltaPosition.y != 0) {
