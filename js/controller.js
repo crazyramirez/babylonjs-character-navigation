@@ -14,6 +14,7 @@ var deltaTime;
 
 // Speed Movement
 var speedMovement = 0.007;
+var speedMovement = 0.007;
 
 // Joysticks
 var leftJoystick;
@@ -22,7 +23,7 @@ var rightJoystick;
 // Simulated Gravity
 var simulatedGravity;    
 var gravityMultiplier = 2000;
-var jumpMultiplier = 0.24;
+var jumpMultiplier = 0.25;
 var onGround = false;
 var onScalable = false;
 
@@ -112,7 +113,7 @@ function updateMovement() {
     {
         bounceEnabled = true;
         onGround = false;
-        jumpValue += deltaTime * jumpMultiplier;
+        jumpValue = deltaTime * jumpMultiplier;
         if (onScalable)
             jumpValue = deltaTime * jumpMultiplier*0.9;
 
@@ -139,19 +140,20 @@ function updateMovement() {
     } else {
         falling = false;
     }
-    // console.log("jumpValue: " + jumpValue);
 
     // Limit JumpValue by velocity.y
-    // if (velocity.y > 15)
-    //     jumpValue = jumpValue;
+    if (velocity.y > 15)
+        jumpValue = jumpValue;
 
-    // if (jumpValue > deltaTime * jumpMultiplier)
-    //     jumpValue = deltaTime * jumpMultiplier;
-    // if (jumpValue < -deltaTime/2)
-    //     jumpValue = -deltaTime/2;
+    if (jumpValue > deltaTime * jumpMultiplier)
+        jumpValue = deltaTime * jumpMultiplier;
+    if (jumpValue < -deltaTime/2)
+        jumpValue = -deltaTime/2;
+
 
     // Update Base FrontVector
-    frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/deltaTime,0));
+    // frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/deltaTime,0));
+    frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue,0)).scale(speedMovement*deltaTime);
 
     // Update Particle System Position
     particleSystem.emitter = new BABYLON.Vector3(player.position.x, player.position.y-0.5, player.position.z);
@@ -402,9 +404,9 @@ function setJoystickController() {
         if (leftJoystick.pressed && leftJoystick.deltaPosition.y != 0) {
 
             if (leftJoystick.deltaPosition.y > 0)
-                frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue,1)).scale(leftJoystick.deltaPosition.y*speedMovement*deltaTime);
+                frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/2,1)).scale(leftJoystick.deltaPosition.y*speedMovement*deltaTime);
             else
-                frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue,-1)).scale(-leftJoystick.deltaPosition.y*speedMovement*deltaTime);
+                frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/2,-1)).scale(-leftJoystick.deltaPosition.y*speedMovement*deltaTime);
 
             if (leftJoystick.deltaPosition.y > 0)
             {
