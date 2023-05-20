@@ -187,7 +187,6 @@ function checkFocusWindow() {
             winFocused = true;
             console.log('Focus');
         }, 300);
-        // resetState();
     });
     $(window).on('blur', function () {
         winFocused = false;
@@ -226,7 +225,8 @@ function setPlayerMovement() {
     } else {
         setKeyboardController();
     }
-
+    
+    // Jump From BT Function
     jumpFromBT();
 }
 
@@ -234,45 +234,41 @@ var keyboardIncrementalSpeed = 0;
 // Keyboard Controller
 function setKeyboardController() {
 
-    // Update Movement Keyboard Controller
-
     // Keypress
     $(document).keypress(function (event) {
         if (event.key == 'w' || event.key == 'W' || event.key == "ArrowUp") {
             isWPressed = true;
         }
-        if (event.key == 's' || event.key == 'S' || event.key == "ArrowDown") {
+        else if (event.key == 's' || event.key == 'S' || event.key == "ArrowDown") {
             isSPressed = true;
         }
-        if (event.key == 'a' || event.key == 'A' || event.key == "ArrowLeft") {
+        else if (event.key == 'a' || event.key == 'A' || event.key == "ArrowLeft") {
             isAPressed = true;
         }
-        if (event.key == 'd' || event.key == 'D' || event.key == "ArrowRight") {
+        else if (event.key == 'd' || event.key == 'D' || event.key == "ArrowRight") {
             isDPressed = true;
         }
-        if (event.code == 'Space') {
+        else if (event.code == 'Space') {
             jumpPressed = true;
-            // setTimeout(() => {
-            //     jumpPressed = false;
-            // }, 20);
         }  
     });
 
     // Keyup
     $(document).keyup(function (event) {
+
         if (event.key == 'w' || event.key == 'W' || event.key == "ArrowUp") {
             isWPressed = false;
         }
-        if (event.key == 's' || event.key == 'S' || event.key == "ArrowDown") {
+        else if (event.key == 's' || event.key == 'S' || event.key == "ArrowDown") {
             isSPressed = false;
         }
-        if (event.key == 'a' || event.key == 'A' || event.key == "ArrowLeft") {
+        else if (event.key == 'a' || event.key == 'A' || event.key == "ArrowLeft") {
             isAPressed = false;
         }
-        if (event.key == 'd' || event.key == 'D' || event.key == "ArrowRight") {
+        else if (event.key == 'd' || event.key == 'D' || event.key == "ArrowRight") {
             isDPressed = false;
         }
-        if (event.code == 'Space') {
+        else if (event.code == 'Space') {
             jumpPressed = false;
         }  
     });

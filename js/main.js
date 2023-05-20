@@ -88,7 +88,7 @@ function startGame() {
     // ground.receiveShadows = true;
 
     const ground2 = BABYLON.MeshBuilder.CreateGroundFromHeightMap("ground", "./resources/textures/heightMap2.png", {
-        width: 150, height: 150, subdivisions: 20, maxHeight: 2, minHeight: -2
+        width: 150, height: 150, subdivisions: 40, maxHeight: 2, minHeight: -2
     });
     ground2.position.y = -1;
     ground2.checkCollisions = true;
@@ -96,7 +96,6 @@ function startGame() {
     ground2.material = groundMaterial;
     ground2.meshType = "scalable";
     ground2.receiveShadows = true;
-    // groundMaterial.wireframe = true;
 
 
     // Basic PBR Material
@@ -364,7 +363,8 @@ function importModelAsync(model) {
 
         ]).then(() => {
             console.log("ALL Loaded");
-            
+            optimizeScene();
+
             // Create Demo Objects
             demoObjects();
 
@@ -374,7 +374,6 @@ function importModelAsync(model) {
             setReflections();
             setShadows();
             setPostProcessing();
-            optimizeScene();
 
             setTimeout(() => {
                 hideLoadingView(); 
@@ -387,18 +386,17 @@ function importModelAsync(model) {
 function optimizeScene() {
     // return;
     // Hardware Scaling
-    var options = new BABYLON.SceneOptimizerOptions(60, 500);
-    options.addOptimization(new BABYLON.HardwareScalingOptimization(0, 1));
+    var options = new BABYLON.SceneOptimizerOptions(50, 500);
+    options.addOptimization(new BABYLON.HardwareScalingOptimization(0, 1.2));
     options.targetFrameRate = 60;
     var optimizer = new BABYLON.SceneOptimizer(scene, options);
     optimizer.start();
     
     // scene.skipPointerMovePicking = true;
     // scene.autoClear = false; // Color buffer
-    // scene.autoClearDepthAndStencil = false; // Depth and stencil, obviously
-    // scene.getAnimationRatio();
+    scene.autoClearDepthAndStencil = false; // Depth and stencil, obviously
     // scene.blockfreeActiveMeshesAndRenderingGroups = true;
-    // scene.performancePriority = BABYLON.ScenePerformancePriority.Intermediate;
+    scene.performancePriority = BABYLON.ScenePerformancePriority.Intermediate;
 }
 
 
