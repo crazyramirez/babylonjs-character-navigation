@@ -389,7 +389,7 @@ function importModelAsync(model) {
                 hideLoadingView(); 
                 // Set Player Controller -- controller.js
                 setPlayerMovement();
-            }, 1000);
+            }, 2000);
         });
 }
 
