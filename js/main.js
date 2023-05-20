@@ -28,7 +28,7 @@ var currentAnim;
 // Ambient Occlusion
 var aoActive = false;
 
-var currentFov = 40;
+var currentFov = 30;
 
 // Create Scene
 function createScene(engine, canvas) {
@@ -170,8 +170,6 @@ function demoObjects() {
     // 3D Text Demo
 
     // load3DText();
-    
-
     const box2 = BABYLON.MeshBuilder.CreateBox("box2", {
         size: 5,
         width: 5,
@@ -319,13 +317,17 @@ function createFollowCamera(target) {
     camera.lockedTarget = target;
     scene.activeCamera = camera; 
     
-    if ($(window).width() > $(window).height())
+
+    if (isTouch)
     {
-        currentFov = 30;
-    } else {
-        currentFov = 50;
+        if ($(window).width() > $(window).height())
+        {
+            currentFov = 30;
+        } else {
+            currentFov = 50;
+        }
+        scene.activeCamera.fov = BABYLON.Tools.ToRadians(currentFov);
     }
-    scene.activeCamera.fov = BABYLON.Tools.ToRadians(currentFov);
 
     // camera.attachControl(canvas);
     return camera;
@@ -466,13 +468,17 @@ function hideLoadingView() {
 window.addEventListener("resize", function () {
     engine.resize();
 
-    if ($(window).width() > $(window).height())
+    if (isTouch)
     {
-        if (scene.activeCamera)
-            currentFov = 30;
-    } else {
-        if (scene.activeCamera)
-            currentFov = 50;
+        if ($(window).width() > $(window).height())
+        {
+            if (scene.activeCamera)
+                currentFov = 30;
+        } else {
+            if (scene.activeCamera)
+                currentFov = 50;
+        }
+        scene.activeCamera.fov = BABYLON.Tools.ToRadians(currentFov);
     }
-    scene.activeCamera.fov = BABYLON.Tools.ToRadians(currentFov);
+
 });
