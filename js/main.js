@@ -312,7 +312,7 @@ function createFollowCamera(target) {
     camera.radius = 8; // how far from the object to follow
     camera.heightOffset = 4; // how high above the object to place the camera
     camera.rotationOffset = 180; // the viewing angle
-    camera.cameraAcceleration = 0.03; // how fast to move
+    camera.cameraAcceleration = 0.02; // how fast to move
     camera.maxCameraSpeed = 1; // speed limit
     scene.backgroundColor = new BABYLON.Color3(0, 0, 0);
     scene.clearColor = new BABYLON.Color4(0, 0, 0, 0);
@@ -338,9 +338,9 @@ function importModelAsync(model) {
 
             // console.log("Meshes: " + result.meshes);
             // Main Player Collision Box
-            player = BABYLON.MeshBuilder.CreateCapsule("player", { width: 0.5, height: 1, size:0.5}, scene);
+            player = BABYLON.MeshBuilder.CreateCapsule("player", { width: 0.3, height: 1, size:0.3}, scene);
             player.visibility = 0;
-            player.ellipsoid = new BABYLON.Vector3(0.5, 0.5, 0.5);
+            player.ellipsoid = new BABYLON.Vector3(0.4, 0.48, 0.4);
             player.position.y = 0.5;
             player.isPickable = false;
             player.checkCollisions = true;

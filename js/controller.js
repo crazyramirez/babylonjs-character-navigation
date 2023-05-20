@@ -25,6 +25,7 @@ var gravityMultiplier = 2000;
 var jumpMultiplier = 0.24;
 var jumpDivider = 20;
 var onGround = false;
+// Need to add Tag Scalabe to objects
 var onScalable = false;
 
 // Check Velocity Y Position for Falling Action
@@ -97,9 +98,10 @@ function updateMovement() {
             onScalable = true;
        }
     } 
-
+    
+    // OnScalable  
     if (onScalable) {
-        jumpValue = deltaTime * simulatedGravity * 0.002;
+        jumpValue = deltaTime * simulatedGravity * 0.1;
     }
 
     // Check OnGround
@@ -117,13 +119,9 @@ function updateMovement() {
         bounceEnabled = true;
         onGround = false;
         jumpValue = deltaTime * jumpMultiplier;
-
-        // jumpValue = scene.getAnimationRatio()*4;
-
         if (onScalable)
             jumpValue = deltaTime * jumpMultiplier*0.95;
-        
-            console.log("jumpValue: " + jumpValue.toFixed(2));
+        console.log("jumpValue: " + jumpValue.toFixed(2));
     } 
 
     // Bounce Player
@@ -131,8 +129,8 @@ function updateMovement() {
     {
         jumpValue = engine.getFps()/80 * 0.35;
     }
-
-
+    
+    // Limit JumpValue
     if (jumpValue > deltaTime * jumpMultiplier * 1.1)
         jumpValue = deltaTime * jumpMultiplier * 1.1;
     if (jumpValue < -deltaTime/2)
