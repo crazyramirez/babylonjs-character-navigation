@@ -144,18 +144,18 @@ html, body {
 #customBT{
     z-index: 199;
     position: absolute;
-    right: 10px;
-    bottom: 10px;
+    right: 0px;
+    bottom: 0px;
     color: white;
     border-color: none;
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     -webkit-user-select: none; /* Safari */
     -ms-user-select: none; /* IE 10 and IE 11 */
     user-select: none; /* Standard syntax */
     background-color: rgba(255, 255, 255, 0);
     background-image: url("../resources/images/jump_icon.png");
-    background-size: 50px;
+    background-size: 40px;
     background-position: center;
     background-repeat: no-repeat;
     opacity: 0.5;

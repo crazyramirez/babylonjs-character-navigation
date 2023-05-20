@@ -13,8 +13,8 @@ var doubleJump;
 var deltaTime;
 
 // Speed Movement
-var speedMovement = 0.002;
-var joystickSpeedMovement = 0.0055;
+var speedMovement = 0.007;
+var speedMovement = 0.007;
 
 // Joysticks
 var leftJoystick;
@@ -56,17 +56,20 @@ function updateMovement() {
         return;
     }
 
+    // Engine DeltaTime
+    deltaTime = engine.getDeltaTime();
+
     // Check Player Velocity
     checkPlayerVelocity();
 
-    console.log("Velocity Y: " + velocity.y);
+    // console.log("Velocity Y: " + velocity.y);
 
     // deltaTime = Math.round(deltaTime);
 
     // Set Gravity & JumpValue
     simulatedGravity = deltaTime / gravityMultiplier;
     jumpValue -= deltaTime * simulatedGravity;
-    
+
 
     // RayCast Pick from Player
     onScalable = false; 
@@ -116,17 +119,19 @@ function updateMovement() {
         jumpValue = deltaTime * jumpMultiplier;
         if (onScalable)
             jumpValue = deltaTime * jumpMultiplier*0.9;
+
+            console.log("jumpValue: " + jumpValue.toFixed(2));
     } 
 
     // Bounce Player
     if (onGround && falling)
     {
-        jumpValue = deltaTime * jumpMultiplier*0.35;
+        jumpValue = deltaTime * jumpMultiplier* 0.35;
     }
 
     if (falling)
     {
-        console.log("Player Position: " + player.position.y);
+        // console.log("Player Position: " + player.position.y);
     }
 
 
@@ -138,22 +143,21 @@ function updateMovement() {
     } else {
         falling = false;
     }
+    // console.log("jumpValue: " + jumpValue);
 
     // Limit JumpValue by velocity.y
-    if (velocity.y > 15)
-        jumpValue =jumpValue;
+    // if (velocity.y > 15)
+    //     jumpValue = jumpValue;
 
+    if (jumpValue > deltaTime * jumpMultiplier)
+        jumpValue = deltaTime * jumpMultiplier;
+    if (jumpValue < -deltaTime/2)
+        jumpValue = -deltaTime/2;
 
-    // if (jumpValue > deltaTime * jumpMultiplier)
-    //     jumpValue = deltaTime * jumpMultiplier;
-    // if (jumpValue < -deltaTime/2)
-    //     jumpValue = -deltaTime/2;
-
-    // console.log("jumpValue: " + jumpValue.toFixed(2));
 
     // Update Base FrontVector
-    frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/20,0));
-
+    // frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/deltaTime,0));
+    frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue,0)).scale(speedMovement*deltaTime);
 
     // Update Particle System Position
     particleSystem.emitter = new BABYLON.Vector3(player.position.x, player.position.y-0.5, player.position.z);
@@ -193,7 +197,7 @@ function resetState() {
         rightJoystick.clearPosition();
     }
     frontVector = player.getDirection(new BABYLON.Vector3(0,0,0));
-    particleSystem.stop();
+    // particleSystem.stop();
 }
 
 // Check Focus Windos
@@ -242,6 +246,8 @@ function setPlayerMovement() {
     } else {
         setKeyboardController();
     }
+
+    jumpFromBT();
 }
 
 var keyboardIncrementalSpeed = 0;
@@ -250,9 +256,6 @@ function setKeyboardController() {
     // Update Movement Keyboard Controller
     scene.registerBeforeRender(()=>{
         
-        // Engine DeltaTime
-        deltaTime = engine.getDeltaTime();
-
         updateMovement();
 
         // Run Forward
@@ -271,7 +274,7 @@ function setKeyboardController() {
                     particleSystem.stop();
             }
             currentAnim = runAnim;
-            frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue,1)).scale(speedMovement*deltaTime*3 * keyboardIncrementalSpeed);
+            frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue,1)).scale(speedMovement*deltaTime * keyboardIncrementalSpeed);
         }
 
         // Run Backward
@@ -291,7 +294,7 @@ function setKeyboardController() {
             }
             
             currentAnim = runBackAnim;
-            frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue,-1)).scale(speedMovement*deltaTime*3 * keyboardIncrementalSpeed);
+            frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue,-1)).scale(speedMovement*deltaTime * keyboardIncrementalSpeed);
         }
         // Rotate Left
         if (isAPressed) {
@@ -305,7 +308,7 @@ function setKeyboardController() {
         // Rotate actions
         if (isAPressed || isDPressed)
         {
-            player.rotate(rotationAxis, speedMovement*deltaTime*1.2, BABYLON.Space.LOCAL);
+            player.rotate(rotationAxis, speedMovement*deltaTime*0.4, BABYLON.Space.LOCAL);
             player.frontVector = new BABYLON.Vector3(Math.sin(player.rotation.z), jumpValue, Math.cos(player.rotation.z))
 
             // Check if Player is currently moving
@@ -392,9 +395,6 @@ function setJoystickController() {
     // Update Movement Joystick Controller
     scene.registerBeforeRender(()=>{
 
-        // Engine DeltaTime
-        deltaTime = engine.getDeltaTime();
-
         // Update Player Movement
         updateMovement();
 
@@ -402,9 +402,9 @@ function setJoystickController() {
         if (leftJoystick.pressed && leftJoystick.deltaPosition.y != 0) {
 
             if (leftJoystick.deltaPosition.y > 0)
-                frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/2,1)).scale(leftJoystick.deltaPosition.y*joystickSpeedMovement*deltaTime);
+                frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/2,1)).scale(leftJoystick.deltaPosition.y*speedMovement*deltaTime);
             else
-                frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/2,-1)).scale(-leftJoystick.deltaPosition.y*joystickSpeedMovement*deltaTime);
+                frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/2,-1)).scale(-leftJoystick.deltaPosition.y*speedMovement*deltaTime);
 
             if (leftJoystick.deltaPosition.y > 0)
             {
@@ -442,7 +442,7 @@ function setJoystickController() {
         if (rightJoystick.pressed) {
 
             var rotationAxis = new BABYLON.Vector3(0, 1, 0)
-            player.rotate(rotationAxis, rightJoystick.deltaPosition.x*speedMovement*deltaTime*1.2, BABYLON.Space.LOCAL);
+            player.rotate(rotationAxis, rightJoystick.deltaPosition.x*speedMovement*deltaTime*0.4, BABYLON.Space.LOCAL);
             player.frontVector = new BABYLON.Vector3(Math.sin(player.rotation.z), jumpValue, Math.cos(player.rotation.z))
 
             // Check if Player is currently moving
