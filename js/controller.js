@@ -278,12 +278,12 @@ function setKeyboardController() {
     scene.registerBeforeRender(()=>{
    
         // Engine DeltaTime
-        deltaTime = engine.getDeltaTime();
 
         updateMovement();
         
         if (winFocused)
         {
+            deltaTime = engine.getDeltaTime();
             frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/jumpDivider,0));
         } else {
             jumpValue = 0;
@@ -395,6 +395,7 @@ function setJoystickController() {
         
         if (winFocused)
         {
+            deltaTime = engine.getDeltaTime();
             frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/jumpDivider,0));
         } else {
             jumpValue = 0;
