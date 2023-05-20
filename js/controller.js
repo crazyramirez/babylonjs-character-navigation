@@ -53,6 +53,7 @@ function updateMovement() {
     
     if (!winFocused)
     {
+        jumpValue = 0;
         deltaTime = 0;
         return;
     }
@@ -104,15 +105,6 @@ function updateMovement() {
         jumpValue = deltaTime * simulatedGravity * 0.1;
     }
 
-    // Check OnGround
-    if (!onGround)
-    {
-        particleSystem.stop();
-        bounceEnabled = false;
-    } else {
-        falling = false;
-    }
-
     // Jump Action
     if (jumpPressed && onGround)
     {
@@ -127,7 +119,7 @@ function updateMovement() {
     // Bounce Player
     if (onGround && falling)
     {
-        jumpValue = engine.getFps()/80 * 0.35;
+        jumpValue = deltaTime * jumpMultiplier * 0.32;
     }
     
     // Limit JumpValue
@@ -136,6 +128,14 @@ function updateMovement() {
     if (jumpValue < -deltaTime/2)
         jumpValue = -deltaTime/2;
 
+    // Check OnGround
+    if (!onGround)
+    {
+        particleSystem.stop();
+        bounceEnabled = false;
+    } else {
+        falling = false;
+    }
 
     // Update Particle System Position
     particleSystem.emitter = new BABYLON.Vector3(player.position.x, player.position.y-0.5, player.position.z);
@@ -183,8 +183,10 @@ function checkFocusWindow() {
    // JQuery Check Window Focus
    $(document).ready(function () {
     $(window).on('focus', function () {
-        winFocused = true;
-        console.log('Focus');
+        setTimeout(() => {
+            winFocused = true;
+            console.log('Focus');
+        }, 300);
         // resetState();
     });
     $(window).on('blur', function () {
@@ -278,18 +280,12 @@ function setKeyboardController() {
     scene.registerBeforeRender(()=>{
    
         // Engine DeltaTime
+        deltaTime = engine.getDeltaTime();
 
         updateMovement();
         
-        if (winFocused)
-        {
-            deltaTime = engine.getDeltaTime();
-            frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/jumpDivider,0));
-        } else {
-            jumpValue = 0;
-            deltaTime = 0;
-            frontVector = player.getDirection(new BABYLON.Vector3(0,0,0));
-        }
+        frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/jumpDivider,0));
+
 
         // Run Forward
         if (isWPressed) {
@@ -393,15 +389,7 @@ function setJoystickController() {
         // Update Player Movement
         updateMovement();
         
-        if (winFocused)
-        {
-            deltaTime = engine.getDeltaTime();
-            frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/jumpDivider,0));
-        } else {
-            jumpValue = 0;
-            deltaTime = 0;
-            frontVector = player.getDirection(new BABYLON.Vector3(0,0,0));
-        }
+        frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/jumpDivider,0));
 
         // Move Forward or Backward
         if (leftJoystick.pressed && leftJoystick.deltaPosition.y != 0) {
