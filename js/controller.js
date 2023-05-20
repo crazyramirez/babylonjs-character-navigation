@@ -23,7 +23,8 @@ var rightJoystick;
 // Simulated Gravity
 var simulatedGravity;    
 var gravityMultiplier = 2000;
-var jumpMultiplier = 0.22;
+var jumpMultiplier = 0.24;
+var jumpDivider = 20;
 var onGround = false;
 var onScalable = false;
 
@@ -142,18 +143,18 @@ function updateMovement() {
     }
 
     // Limit JumpValue by velocity.y
-    if (velocity.y > 15)
-        jumpValue = jumpValue;
+    // if (velocity.y > 15)
+    //     jumpValue = jumpValue;
 
     if (jumpValue > deltaTime * jumpMultiplier)
         jumpValue = deltaTime * jumpMultiplier;
     if (jumpValue < -deltaTime/2)
         jumpValue = -deltaTime/2;
 
+    
+    // console.log("Ratio: " + scene.getAnimationRatio());
 
     // Update Base FrontVector
-    // frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/deltaTime,0));
-    frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue,0)).scale(speedMovement*deltaTime);
 
     // Update Particle System Position
     particleSystem.emitter = new BABYLON.Vector3(player.position.x, player.position.y-0.5, player.position.z);
@@ -251,11 +252,17 @@ var keyboardIncrementalSpeed = 0;
 function setKeyboardController() {
     // Update Movement Keyboard Controller
     scene.registerBeforeRender(()=>{
-        
+        if (!winFocused)
+        {
+            deltaTime = 0;
+            return;
+        }
         // Engine DeltaTime
         deltaTime = engine.getDeltaTime();
 
         updateMovement();
+        
+        frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/jumpDivider,0));
 
         // Run Forward
         if (isWPressed) {
@@ -273,7 +280,7 @@ function setKeyboardController() {
                     particleSystem.stop();
             }
             currentAnim = runAnim;
-            frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue,1)).scale(speedMovement*deltaTime * keyboardIncrementalSpeed);
+            frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/jumpDivider,speedMovement*deltaTime * keyboardIncrementalSpeed));
         }
 
         // Run Backward
@@ -293,7 +300,8 @@ function setKeyboardController() {
             }
             
             currentAnim = runBackAnim;
-            frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue,-1)).scale(speedMovement*deltaTime * keyboardIncrementalSpeed);
+            frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/jumpDivider,-speedMovement*deltaTime * keyboardIncrementalSpeed));
+            // frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue,-1)).scale(speedMovement*deltaTime * keyboardIncrementalSpeed);
         }
         // Rotate Left
         if (isAPressed) {
@@ -393,20 +401,25 @@ function setJoystickController() {
    
     // Update Movement Joystick Controller
     scene.registerBeforeRender(()=>{
-
+        if (!winFocused)
+        {
+            deltaTime = 0;
+            return;
+        }
         // Engine DeltaTime
         deltaTime = engine.getDeltaTime();
 
         // Update Player Movement
         updateMovement();
+        frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/jumpDivider,0));
 
         // Move Forward or Backward
         if (leftJoystick.pressed && leftJoystick.deltaPosition.y != 0) {
 
             if (leftJoystick.deltaPosition.y > 0)
-                frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/2,1)).scale(leftJoystick.deltaPosition.y*speedMovement*deltaTime);
+                frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/jumpDivider,leftJoystick.deltaPosition.y*speedMovement*deltaTime));
             else
-                frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/2,-1)).scale(-leftJoystick.deltaPosition.y*speedMovement*deltaTime);
+                frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/jumpDivider,-leftJoystick.deltaPosition.y*speedMovement*deltaTime * -1));
 
             if (leftJoystick.deltaPosition.y > 0)
             {
