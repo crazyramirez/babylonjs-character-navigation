@@ -28,6 +28,8 @@ var currentAnim;
 // Ambient Occlusion
 var aoActive = false;
 
+var currentFov = 40;
+
 // Create Scene
 function createScene(engine, canvas) {
     // Set Canvas & Engine //
@@ -316,6 +318,15 @@ function createFollowCamera(target) {
     scene.autoClearDepthAndStencil = false; // Depth and stencil, obviously
     camera.lockedTarget = target;
     scene.activeCamera = camera; 
+    
+    if ($(window).width() > $(window).height())
+    {
+        currentFov = 30;
+    } else {
+        currentFov = 50;
+    }
+    scene.activeCamera.fov = BABYLON.Tools.ToRadians(currentFov);
+
     // camera.attachControl(canvas);
     return camera;
 }
@@ -384,15 +395,16 @@ function optimizeScene() {
     // return;
     // Hardware Scaling
     var options = new BABYLON.SceneOptimizerOptions(60, 500);
-    options.addOptimization(new BABYLON.HardwareScalingOptimization(0, 1.5));
+    options.addOptimization(new BABYLON.HardwareScalingOptimization(0, 1.25));
+    // options.addOptimization(new BABYLON.ShadowsOptimization(1));
     options.targetFrameRate = 60;
     var optimizer = new BABYLON.SceneOptimizer(scene, options);
     optimizer.start();
     // scene.skipPointerMovePicking = true;
     // scene.autoClear = false; // Color buffer
-    scene.autoClearDepthAndStencil = false; // Depth and stencil, obviously
+    // scene.autoClearDepthAndStencil = false; // Depth and stencil, obviously
     // scene.blockfreeActiveMeshesAndRenderingGroups = true;
-    scene.performancePriority = BABYLON.ScenePerformancePriority.Intermediate;
+    // scene.performancePriority = BABYLON.ScenePerformancePriority.Intermediate;
 }
 
 
@@ -453,4 +465,14 @@ function hideLoadingView() {
 // Resize Window
 window.addEventListener("resize", function () {
     engine.resize();
+
+    if ($(window).width() > $(window).height())
+    {
+        if (scene.activeCamera)
+            currentFov = 30;
+    } else {
+        if (scene.activeCamera)
+            currentFov = 50;
+    }
+    scene.activeCamera.fov = BABYLON.Tools.ToRadians(currentFov);
 });
