@@ -370,10 +370,10 @@ function importModelAsync(model) {
             setReflections();
             setShadows();
             setPostProcessing();
+            optimizeScene();
 
             setTimeout(() => {
                 hideLoadingView(); 
-                optimizeScene();
                 // Set Player Controller -- controller.js
                 setPlayerMovement();
             }, 1000);
@@ -384,11 +384,10 @@ function optimizeScene() {
     // return;
     // Hardware Scaling
     var options = new BABYLON.SceneOptimizerOptions(60, 500);
-    options.addOptimization(new BABYLON.HardwareScalingOptimization(0, 1.2));
+    options.addOptimization(new BABYLON.HardwareScalingOptimization(0, 1.5));
     options.targetFrameRate = 60;
     var optimizer = new BABYLON.SceneOptimizer(scene, options);
     optimizer.start();
-    
     // scene.skipPointerMovePicking = true;
     // scene.autoClear = false; // Color buffer
     scene.autoClearDepthAndStencil = false; // Depth and stencil, obviously
