@@ -13,14 +13,13 @@ var doubleJump;
 var deltaTime;
 
 // Speed Movement
-var speedMovement = 0.007;
-var speedMovement = 0.007;
+var speedMovement = 0.0065;
 
 // Joysticks
 var leftJoystick;
 var rightJoystick;
 
-// Simulated Gravity
+// Simulated Gravity & Jump
 var simulatedGravity;    
 var gravityMultiplier = 2000;
 var jumpMultiplier = 0.24;
@@ -60,14 +59,9 @@ function updateMovement() {
     // Check Player Velocity
     checkPlayerVelocity();
 
-    // console.log("Velocity Y: " + velocity.y);
-
-    // deltaTime = Math.round(deltaTime);
-
     // Set Gravity & JumpValue
     simulatedGravity = deltaTime / gravityMultiplier;
     jumpValue -= deltaTime * simulatedGravity;
-
 
     // RayCast Pick from Player
     onScalable = false; 
@@ -107,7 +101,6 @@ function updateMovement() {
     if (onScalable) {
         jumpValue = deltaTime * simulatedGravity * 0.002;
     }
-    // console.log("jumpValue:" + deltaTime * jumpMultiplier);
 
     // Jump Action
     if (jumpPressed && onGround)
@@ -127,12 +120,6 @@ function updateMovement() {
         jumpValue = deltaTime * jumpMultiplier* 0.35;
     }
 
-    if (falling)
-    {
-        // console.log("Player Position: " + player.position.y);
-    }
-
-
     // Check OnGround
     if (!onGround)
     {
@@ -142,19 +129,10 @@ function updateMovement() {
         falling = false;
     }
 
-    // Limit JumpValue by velocity.y
-    // if (velocity.y > 15)
-    //     jumpValue = jumpValue;
-
     if (jumpValue > deltaTime * jumpMultiplier)
         jumpValue = deltaTime * jumpMultiplier;
     if (jumpValue < -deltaTime/2)
         jumpValue = -deltaTime/2;
-
-    
-    // console.log("Ratio: " + scene.getAnimationRatio());
-
-    // Update Base FrontVector
 
     // Update Particle System Position
     particleSystem.emitter = new BABYLON.Vector3(player.position.x, player.position.y-0.5, player.position.z);
@@ -254,6 +232,7 @@ function setKeyboardController() {
     scene.registerBeforeRender(()=>{
         if (!winFocused)
         {
+            jumpValue = 0;
             deltaTime = 0;
             return;
         }
@@ -403,6 +382,7 @@ function setJoystickController() {
     scene.registerBeforeRender(()=>{
         if (!winFocused)
         {
+            jumpValue = 0;
             deltaTime = 0;
             return;
         }
@@ -425,7 +405,7 @@ function setJoystickController() {
             {
                 if (onGround)
                 {
-                    jumpValue -= simulatedGravity * deltaTime;
+                    // jumpValue -= simulatedGravity * deltaTime;
                     scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runAnim, 1.5, 0.03));
                     if (velocity.z != 0 && velocity.y > 0)
                         particleSystem.start();
@@ -437,7 +417,7 @@ function setJoystickController() {
                 scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runAnim, 1.2, 0.03));
                 if (onGround)
                 {
-                    jumpValue -= simulatedGravity * deltaTime;
+                    // jumpValue -= simulatedGravity * deltaTime;
                     scene.onBeforeRenderObservable.runCoroutineAsync(animationBlending(currentAnim, runBackAnim, 1.5, 0.03));
                     if (velocity.z != 0 && velocity.y > 0)
                         particleSystem.start();
