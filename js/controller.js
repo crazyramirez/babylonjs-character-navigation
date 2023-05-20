@@ -181,19 +181,20 @@ function resetState() {
 // Check Focus Windos
 function checkFocusWindow() {  
    // JQuery Check Window Focus
-   $(document).ready(function () {
-    $(window).on('focus', function () {
-        setTimeout(() => {
-            winFocused = true;
-            console.log('Focus');
-        }, 300);
+    $(document).ready(function () {
+        $(window).on('focus', function () {
+            setTimeout(() => {
+                winFocused = true;
+                console.log('Focus');
+                resetState();
+            }, 300);
+        });
+        $(window).on('blur', function () {
+            winFocused = false;
+            console.log('Blur');
+            resetState();
+        });
     });
-    $(window).on('blur', function () {
-        winFocused = false;
-        console.log('Blur');
-        resetState();
-    });
-});
 }
 
 // Player Movement //

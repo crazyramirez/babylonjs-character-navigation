@@ -37,9 +37,6 @@ function createScene(engine, canvas) {
     return scene;
 }
 
-
-
-
 // Start Game
 function startGame() {
 
@@ -363,7 +360,6 @@ function importModelAsync(model) {
 
         ]).then(() => {
             console.log("ALL Loaded");
-            optimizeScene();
 
             // Create Demo Objects
             demoObjects();
@@ -377,6 +373,7 @@ function importModelAsync(model) {
 
             setTimeout(() => {
                 hideLoadingView(); 
+                optimizeScene();
                 // Set Player Controller -- controller.js
                 setPlayerMovement();
             }, 1000);
@@ -386,7 +383,7 @@ function importModelAsync(model) {
 function optimizeScene() {
     // return;
     // Hardware Scaling
-    var options = new BABYLON.SceneOptimizerOptions(50, 500);
+    var options = new BABYLON.SceneOptimizerOptions(60, 500);
     options.addOptimization(new BABYLON.HardwareScalingOptimization(0, 1.2));
     options.targetFrameRate = 60;
     var optimizer = new BABYLON.SceneOptimizer(scene, options);
