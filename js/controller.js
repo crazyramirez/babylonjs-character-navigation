@@ -23,7 +23,7 @@ var rightJoystick;
 // Simulated Gravity
 var simulatedGravity;    
 var gravityMultiplier = 2000;
-var jumpMultiplier = 0.28;
+var jumpMultiplier = 0.22;
 var onGround = false;
 var onScalable = false;
 
@@ -58,6 +58,10 @@ function updateMovement() {
 
     // Check Player Velocity
     checkPlayerVelocity();
+
+    console.log("Velocity Y: " + velocity.y);
+
+    // deltaTime = Math.round(deltaTime);
 
     // Set Gravity & JumpValue
     simulatedGravity = deltaTime / gravityMultiplier;
@@ -120,6 +124,12 @@ function updateMovement() {
         jumpValue = deltaTime * jumpMultiplier*0.35;
     }
 
+    if (falling)
+    {
+        console.log("Player Position: " + player.position.y);
+    }
+
+
     // Check OnGround
     if (!onGround)
     {
@@ -129,15 +139,21 @@ function updateMovement() {
         falling = false;
     }
 
-    if (jumpValue > deltaTime * jumpMultiplier)
-        jumpValue = deltaTime * jumpMultiplier;
-    if (jumpValue < -deltaTime/2)
-        jumpValue = -deltaTime/2;
+    // Limit JumpValue by velocity.y
+    if (velocity.y > 15)
+        jumpValue =jumpValue;
+
+
+    // if (jumpValue > deltaTime * jumpMultiplier)
+    //     jumpValue = deltaTime * jumpMultiplier;
+    // if (jumpValue < -deltaTime/2)
+    //     jumpValue = -deltaTime/2;
 
     // console.log("jumpValue: " + jumpValue.toFixed(2));
 
     // Update Base FrontVector
     frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/20,0));
+
 
     // Update Particle System Position
     particleSystem.emitter = new BABYLON.Vector3(player.position.x, player.position.y-0.5, player.position.z);
@@ -464,7 +480,7 @@ function jumpFromBT() {
         jumpPressed = true;
     setTimeout(() => {
         jumpPressed = false;
-    }, 100);
+    }, 20);
 }
 
 // Animation Blending //
