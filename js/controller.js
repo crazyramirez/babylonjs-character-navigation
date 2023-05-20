@@ -121,7 +121,7 @@ function updateMovement() {
         // jumpValue = scene.getAnimationRatio()*4;
 
         if (onScalable)
-            jumpValue = engine.getFps()/80*0.9;
+            jumpValue = deltaTime * jumpMultiplier*0.95;
         
             console.log("jumpValue: " + jumpValue.toFixed(2));
     } 
