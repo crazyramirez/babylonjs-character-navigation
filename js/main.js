@@ -315,8 +315,7 @@ function createFollowCamera(target) {
     scene.autoClear = false; // Color buffer
     scene.autoClearDepthAndStencil = false; // Depth and stencil, obviously
     camera.lockedTarget = target;
-    scene.activeCamera = camera; 
-    
+    scene.activeCamera = camera;
 
     if (isTouch)
     {

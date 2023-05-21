@@ -43,6 +43,7 @@ const ray3 = new BABYLON.Ray();
 const rayHelper3 = new BABYLON.RayHelper(ray3); 
 const ray4 = new BABYLON.Ray();
 const rayHelper4 = new BABYLON.RayHelper(ray4); 
+var pickArray = [ray, ray2, ray3, ray4];
 
 // Particle System
 var particleSystem;
@@ -67,38 +68,16 @@ function updateMovement() {
 
     // RayCast Pick from Player
     onScalable = false; 
-    var pick = scene.pickWithRay(ray);
-    if (pick.hit){
-       onGround = true;
-       if (pick.pickedMesh.meshType && pick.pickedMesh.meshType == "scalable")
-       {
-            onScalable = true;
-       }
-    } 
-    var pick2 = scene.pickWithRay(ray2);
-    if (pick2.hit){
-       onGround = true;
-       if (pick2.pickedMesh.meshType && pick2.pickedMesh.meshType == "scalable")
-       {
-            onScalable = true;
-       }
-    } 
-    var pick3 = scene.pickWithRay(ray3);
-    if (pick3.hit){
-       onGround = true;
-       if (pick3.pickedMesh.meshType && pick3.pickedMesh.meshType == "scalable")
-       {
-            onScalable = true;
-       }
-    } 
-    var pick4 = scene.pickWithRay(ray4);
-    if (pick4.hit){
-       onGround = true;
-       if (pick4.pickedMesh.meshType && pick4.pickedMesh.meshType == "scalable")
-       {
-            onScalable = true;
-       }
-    } 
+    pickArray.forEach((ray) => {
+        var pick = scene.pickWithRay(ray);
+        if (pick.hit){
+           onGround = true;
+           if (pick.pickedMesh.meshType && pick.pickedMesh.meshType == "scalable")
+           {
+                onScalable = true;
+           }
+        } 
+    });
     
     // OnScalable  
     if (onScalable) {
@@ -175,7 +154,7 @@ function resetState() {
         rightJoystick.clearPosition();
     }
     frontVector = player.getDirection(new BABYLON.Vector3(0,0,0));
-    // particleSystem.stop();
+    particleSystem.stop();
 }
 
 // Check Focus Windos
@@ -187,7 +166,7 @@ function checkFocusWindow() {
                 winFocused = true;
                 console.log('Focus');
                 resetState();
-            }, 300);
+            }, 500);
         });
         $(window).on('blur', function () {
             winFocused = false;
@@ -237,6 +216,8 @@ function setKeyboardController() {
 
     // Keypress
     $(document).keypress(function (event) {
+        event.preventDefault();
+
         if (event.key == 'w' || event.key == 'W' || event.key == "ArrowUp") {
             isWPressed = true;
         }
@@ -256,6 +237,7 @@ function setKeyboardController() {
 
     // Keyup
     $(document).keyup(function (event) {
+        event.preventDefault();
 
         if (event.key == 'w' || event.key == 'W' || event.key == "ArrowUp") {
             isWPressed = false;
@@ -282,7 +264,6 @@ function setKeyboardController() {
         updateMovement();
         
         frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/jumpDivider,0));
-
 
         // Run Forward
         if (isWPressed) {
