@@ -86,8 +86,8 @@ function startGame() {
     // ground.isPickable = true;
     // ground.receiveShadows = true;
 
-    const ground2 = BABYLON.MeshBuilder.CreateGroundFromHeightMap("ground", "./resources/textures/heightMap2.png", {
-        width: 150, height: 150, subdivisions: 40, maxHeight: 2, minHeight: -2
+    const ground2 = BABYLON.MeshBuilder.CreateGroundFromHeightMap("ground", "./resources/textures/heightMap.png", {
+        width: 150, height: 150, subdivisions: 40, maxHeight: 3, minHeight: -2
     });
     ground2.position.y = -1;
     ground2.checkCollisions = true;

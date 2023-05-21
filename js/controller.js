@@ -261,6 +261,7 @@ function setKeyboardController() {
         // Engine DeltaTime
         deltaTime = engine.getDeltaTime();
 
+        // Update Player Movement
         updateMovement();
         
         frontVector = player.getDirection(new BABYLON.Vector3(0,jumpValue/jumpDivider,0));
