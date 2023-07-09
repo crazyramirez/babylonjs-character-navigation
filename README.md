@@ -8,7 +8,7 @@
 This is a simple Character Navigation demo using Babylon JS 6.
 
 <b><span>&#10003;</span>
-Setup NPM</b>
+Setup NPM and Install BJS</b>
 
 - Install NodeJS from https://nodejs.org/en
 - Download or Clone this Repository
