@@ -115,11 +115,11 @@ function startGame() {
 
     if (!isTouch)
     {
-        // loadGUI();
         document.getElementById("customBT").style.display = "none";
     }
 
 
+    // Jump From BT
     $(document).ready(function(){ 
         $('#customBT').on('click touchstart', function() {
             jumpFromBT();
@@ -141,7 +141,7 @@ async function load3DText() {
         depth: 0.15
     });
 
-    myText.position = new BABYLON.Vector3(0,2,2);
+    myText.position = new BABYLON.Vector3(0,2,4);
 
     var textMaterial = new BABYLON.PBRMaterial("textMaterial", scene);
     textMaterial.albedoTexture = new BABYLON.Texture("./resources/textures/metal.jpg", scene);
@@ -169,7 +169,7 @@ function demoObjects() {
 
     // 3D Text Demo
 
-    // load3DText();
+    load3DText();
     const box2 = BABYLON.MeshBuilder.CreateBox("box2", {
         size: 5,
         width: 5,
@@ -383,7 +383,7 @@ function importModelAsync(model) {
             setShadows();
             setPostProcessing();
             optimizeScene();
-
+            
             setTimeout(() => {
                 hideLoadingView(); 
                 // Set Player Controller -- controller.js
