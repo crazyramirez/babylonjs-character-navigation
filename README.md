@@ -1,4 +1,9 @@
 # babylonjs-character-navigation
+
+<a href="https://www.viseni.com" target="_blank"><img src="https://www.viseni.com/viseni_logo_2.png" style="width: 200px; margin-bottom: 50px"></a>
+<br>
+<br>
+
 This is a simple Character Navigation demo using Babylon JS 6.
 
 <b><span>&#10003;</span>
