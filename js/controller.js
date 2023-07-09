@@ -22,7 +22,7 @@ var rightJoystick;
 // Simulated Gravity & Jump
 var simulatedGravity;    
 var gravityMultiplier = 2000;
-var jumpMultiplier = 0.24;
+var jumpMultiplier = 0.26;
 var jumpDivider = 20;
 var onGround = false;
 // Need to add Tag Scalabe to objects
