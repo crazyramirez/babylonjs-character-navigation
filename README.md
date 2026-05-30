@@ -31,7 +31,7 @@ On mobile use the Left Stick for movement, the Right Stick to turn the character
 
 <b><span>&#10003;</span>
 Try the Live DEMO</b>
-https://www.viseni.com/character_navigation
+https://www.viseni.com/_demos_/character_navigation
 
 
 -- TO DO --
